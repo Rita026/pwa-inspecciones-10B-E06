@@ -6,6 +6,13 @@ Comiencen por `START_HERE.md` y lean `ACTIVIDAD-01.md`. Este es un proyecto acum
 
 Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub. No se requiere Make. Registren aquí las versiones usadas (`node --version`, `npm --version`) y cualquier dificultad de entorno que encuentren.
 
+**Versiones usadas por el equipo:**
+- Node.js: v24.16.0
+- npm: 10.8.1
+- Sistema operativo: Windows
+
+**Dificultades de entorno encontradas:** Ninguna. La instalación con `npm ci` mostró 2 advertencias de vulnerabilidades de severidad alta en dependencias del starter, pero no afectaron la instalación ni ejecución del proyecto.
+
 ## Ejecución
 
 ```bash
@@ -37,4 +44,14 @@ Inviten a los integrantes y al docente al mismo repositorio privado. Cada person
 - `evidence/`: evidencia propia de cada integrante.
 - `tests/`: prueba inicial proporcionada; no es una suite completa de comportamiento.
 
-Registren aquí sus supuestos y limitaciones de ejecución. El starter todavía no implementa instalación PWA, offline ni sincronización. No incluyan datos personales reales en el producto, archivos `.env` ni credenciales. La identificación de integrantes se conserva en el repositorio privado y Classroom.
+Registren aquí sus supuestos y limitaciones de ejecución.
+
+**Supuestos y limitaciones:**
+- Se asume que todos los integrantes del equipo cuentan con Node.js 20.19 o superior y npm 10 o superior instalados en su computadora.
+- El proyecto fue probado únicamente en Windows; no se ha confirmado su funcionamiento en macOS o Linux.
+- Los datos mostrados (las tres inspecciones) son sintéticos y están precargados en el código; no provienen de una base de datos ni de un servidor externo todavía.
+- Como indica la actividad, esta semana no se implementa manifest, service worker, modo offline, sincronización, notificaciones ni autenticación; esas funciones se agregarán en semanas posteriores.
+
+ El starter todavía no implementa instalación PWA, offline ni sincronización. No incluyan datos personales reales en el producto, archivos `.env` ni credenciales. La identificación de integrantes se conserva en el repositorio privado y Classroom.
+
+
