@@ -119,15 +119,29 @@
   personalmente el ADR con el equipo, confirmar que refleja sus escenarios y
   aprobar el contenido antes de incluirlo en el commit final.
 
-## Integrante: escribir nombre
+## Integrante: Katherine Daniela Gómez Merino
 
 - Mi contribución concreta y enlace a archivo, commit anterior o revisión:
+  Elaboré y documenté los requisitos del producto para la Semana 1 en docs/requirements.md. Mi contribución incluye la definición del problema y contexto, usuarios y escenarios, requisitos funcionales, requisitos no funcionales, datos sintéticos, límites y criterios de aceptación de la semana.
+  Commit: https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/072179354e985b55adb20c5d732ab66c3e0bcc18
+
 - Decisión que puedo explicar y por qué:
+  Decidí diferenciar en los requisitos las funcionalidades que corresponden a la Semana 1 de las funcionalidades futuras. Esto permite documentar desde ahora características como el funcionamiento offline y la sincronización, sin implementarlas antes de la etapa indicada en la actividad.
+
 - Comando o prueba proporcionada que ejecuté:
+  Ejecuté npm ci para instalar las dependencias del proyecto y npm run verify para realizar la verificación indicada por el starter.
+
 - Resultado real que observé:
+  El entorno pudo instalar sus dependencias y se realizó la verificación del proyecto. La aplicación del starter permite visualizar las inspecciones sintéticas proporcionadas.
+
 - Qué verifica esa prueba y qué no verifica:
+  La prueba permite comprobar aspectos técnicos del proyecto, como la instalación de dependencias, la estructura esperada y la ejecución de las verificaciones proporcionadas por el starter. No demuestra que las funcionalidades futuras de operación offline, sincronización, notificaciones o autenticación estén implementadas ni comprueba por sí sola la calidad del análisis de los requisitos.
+
 - Limitación, dificultad o riesgo que identifiqué:
-- Uso de IA: herramienta, propósito, partes influenciadas y validación propia (o «no utilicé IA»):
+  Una dificultad fue diferenciar claramente entre lo que debía documentarse como requisito futuro y lo que realmente debía implementarse durante la Semana 1. También identifiqué como riesgo que una conectividad intermitente pueda provocar pérdida de información durante una inspección, por lo que se documentó la operación offline y la sincronización como necesidades futuras.
+
+- Uso de IA: herramienta, propósito, partes influenciadas y validación propia:
+  Utilicé ChatGPT como apoyo para revisar y mejorar la redacción de los requisitos, organizar las secciones y comprobar que los requisitos fueran claros y verificables. La IA influyó principalmente en la redacción y organización del documento. La información fue revisada y validada con las instrucciones de la actividad, el código del starter y los requisitos solicitados por el profesor. La decisión final sobre el contenido y alcance del documento fue realizada por mí.
 
 
 
