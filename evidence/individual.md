@@ -64,15 +64,60 @@
   app en localhost:3000, y el PASS de la prueba) antes de documentarlos aquí.
 
 
-## Integrante: escribir nombre
+## Integrante: Enrique Julian Gracia López
 
 - Mi contribución concreta y enlace a archivo, commit anterior o revisión:
+  Elaboré el análisis y la propuesta de decisión arquitectónica en
+  [`docs/decision-record.md`](../docs/decision-record.md). Comparé PWA, web
+  tradicional, app nativa y app multiplataforma según instalación, conectividad
+  intermitente, distribución, desarrollo, mantenimiento y acceso al dispositivo.
+  También documenté riesgos y validaciones que deberán realizarse en semanas
+  posteriores. Este cambio debe incluirse en el siguiente commit final del equipo.
+
 - Decisión que puedo explicar y por qué:
+  Propuse conservar Next.js y evolucionar el producto como PWA. Para inspecciones
+  de laboratorio, abrir la aplicación por URL reduce la fricción de distribución
+  y una futura persistencia local puede evitar perder hallazgos cuando falle el
+  Wi-Fi. No propuse afirmar que el modo offline ya funciona: el starter actual
+  no tiene manifest, service worker, almacenamiento local ni sincronización.
+  Una aplicación nativa o multiplataforma se reconsideraría si se necesita
+  hardware especializado, ejecución confiable en segundo plano o si las pruebas
+  muestran límites de compatibilidad que una PWA no puede cubrir.
+
 - Comando o prueba proporcionada que ejecuté:
+  `npm.cmd run verify` en PowerShell. Es el mismo script definido por
+  `npm run verify`; se usó `npm.cmd` porque la política local bloquea el wrapper
+  `npm.ps1`.
+
 - Resultado real que observé:
+  La primera ejecución no pudo iniciar con `npm` porque PowerShell bloqueó
+  `npm.ps1`; además, antes de instalar dependencias el build no encontró
+  `next`. Después de ejecutar `npm.cmd ci` desde el lockfile, `npm.cmd run
+  verify` terminó con código 0: la prueba proporcionada mostró
+  `starter.spec.mjs: PASS`, el build de Next.js compiló correctamente y el
+  reporte indicó `Verificación técnica: pass. Revisión académica: pendiente.`
+  Se generó `reports/verification.json` para adjuntarlo en Classroom.
+
 - Qué verifica esa prueba y qué no verifica:
+  `npm run verify` comprueba que existan los archivos requeridos, ejecuta la
+  prueba proporcionada del starter y compila la aplicación con `next build`.
+  Genera `reports/verification.json`. No evalúa la calidad del análisis del ADR,
+  no certifica ausencia de secretos y no prueba instalación PWA, uso sin red,
+  persistencia local ni sincronización.
+
 - Limitación, dificultad o riesgo que identifiqué:
-- Uso de IA: herramienta, propósito, partes influenciadas y validación propia (o «no utilicé IA»):
+  La decisión PWA depende de capacidades que aún no existen en el proyecto. Al
+  implementar almacenamiento local y sincronización podrían aparecer conflictos
+  entre cambios de distintos dispositivos, límites de almacenamiento y diferencias
+  de compatibilidad entre navegadores. Por ello el ADR propone validarlos con
+  datos sintéticos antes de usar datos reales.
+
+- Uso de IA: herramienta, propósito, partes influenciadas y validación propia:
+  Usé Codex (OpenAI) para revisar las instrucciones de la actividad, estructurar
+  un borrador de la comparación y redactar el ADR. Codex ejecutó la verificación
+  local y el resultado se registró arriba. Antes de la entrega final debo revisar
+  personalmente el ADR con el equipo, confirmar que refleja sus escenarios y
+  aprobar el contenido antes de incluirlo en el commit final.
 
 ## Integrante: escribir nombre
 
