@@ -144,5 +144,27 @@
   Utilicé ChatGPT como apoyo para revisar y mejorar la redacción de los requisitos, organizar las secciones y comprobar que los requisitos fueran claros y verificables. La IA influyó principalmente en la redacción y organización del documento. La información fue revisada y validada con las instrucciones de la actividad, el código del starter y los requisitos solicitados por el profesor. La decisión final sobre el contenido y alcance del documento fue realizada por mí.
 
 
+## Semana 2
+
+## Integrante: Katherine Daniela Gómez Merino
+
+- Commit SHA evaluado: Se entregará en Classroom después del último commit, de acuerdo con las indicaciones de la actividad.
+
+- Decisión técnica que puedo explicar: crear un AppShell reutilizable que centralice el encabezado, la navegación principal y el contenido mediante children, usando next/link y un nombre accesible para la navegación.
+
+- Prueba que ejecuté y resultado: Ejecuté npm run test:unit, npm test, npm run build y npm run verify.
+
+Resultados:
+- npm run test:unit: PASS. La suite de App Shell pasó correctamente con 1 prueba aprobada.
+- npm test: PASS. La prueba proporcionada por el starter terminó correctamente.
+- npm run build: PASS. Next.js compiló correctamente el proyecto.
+- npm run verify: PASS. La verificación técnica terminó correctamente.
+
+- Limitación o fallo diagnosticado: La prueba verifica la estructura y navegación del App Shell, pero no demuestra por sí sola la instalación completa de la PWA ni el manifest, porque esa parte corresponde a otra sección del trabajo.
+
+- Cambio que podría defender o modificar en vivo: Puedo explicar y modificar la estructura del App Shell, sus enlaces, aria-label, estilos o el contenido recibido mediante children.
+
+- Uso declarado de IA (herramienta, propósito, validación): Utilice ChatGPT como apoyo para estructurar/revisar la implementación y las pruebas, pero revise el código, corregí la codificación, ejecute las pruebas y valide el resultado.
+
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
