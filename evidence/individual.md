@@ -144,5 +144,43 @@
   Utilicé ChatGPT como apoyo para revisar y mejorar la redacción de los requisitos, organizar las secciones y comprobar que los requisitos fueran claros y verificables. La IA influyó principalmente en la redacción y organización del documento. La información fue revisada y validada con las instrucciones de la actividad, el código del starter y los requisitos solicitados por el profesor. La decisión final sobre el contenido y alcance del documento fue realizada por mí.
 
 
+---------------------------------------------------------------------------------------------------
+# Semana 2 — Evidencia individual
+
+## Integrante: Rita González Sánchez
+
+- Commit SHA evaluado: (lo obtendrás después de tu próximo commit)
+
+- Decisión técnica que puedo explicar: 
+Implementé los 3 estados usando los archivos especiales de Next.js (loading.tsx, error.tsx) en vez de manejar la lógica manualmente con useState, porque es el patrón recomendado por el framework y se integra automáticamente sin código adicional de control de flujo.
+
+- Prueba que ejecuté y resultado: 
+Verifiqué manualmente los 3 escenarios en el navegador (/, /?estado=vacio, /?estado=error) con npm run dev; los 3 se mostraron correctamente.
+
+- Limitación o fallo diagnosticado: 
+Los estados de vacío y error se activan por parámetro de URL, no por una condición de red real, ya que el proyecto aún no está conectado a un backend.
+
+- Cambio que podría defender o modificar en vivo: 
+Podría explicar cómo cambiar el tiempo de demora simulada (NETWORK_DELAY_MS) o cómo agregar un nuevo escenario adicional a getInspections().
+
+- Uso declarado de IA: 
+Usé Claude (Anthropic) para diseñar la estructura de los 3 estados usando las convenciones de Next.js (loading.tsx, error.tsx) y para redactar esta evidencia y el README. Validé personalmente cada estado ejecutando el proyecto y navegando a las 3 URLs.
+
+
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+
+
+
+
+
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.

@@ -44,3 +44,31 @@ export const inspections: Inspection[] = [
   }
 ];
 
+export type InspectionScenario = "ok" | "empty" | "error";
+
+  const NETWORK_DELAY_MS = 600;
+
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Simula una llamada a un servicio remoto para obtener inspecciones.
+   * Permite forzar los escenarios de error y vacío mediante `scenario`,
+   * útil para demostrar los estados de carga, error y vacío del shell.
+   */
+  export async function getInspections(
+    scenario: InspectionScenario = "ok"
+  ): Promise<Inspection[]> {
+    await delay(NETWORK_DELAY_MS);
+
+    if (scenario === "error") {
+      throw new Error("No se pudo obtener el listado de inspecciones.");
+    }
+
+    if (scenario === "empty") {
+      return [];
+    }
+
+    return inspections;
+}
