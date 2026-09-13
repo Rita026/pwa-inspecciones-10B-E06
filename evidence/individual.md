@@ -149,22 +149,25 @@
 
 ## Integrante: Rita González Sánchez
 
-- Commit SHA evaluado: 
+- Commit SHA evaluado: 09cb20a0c37af77307bec7d95bb3e5d74da1c6cd
 
 - Decisión técnica que puedo explicar: 
-Implementé los 3 estados usando los archivos especiales de Next.js (loading.tsx, error.tsx) en vez de manejar la lógica manualmente con useState, porque es el patrón recomendado por el framework y se integra automáticamente sin código adicional de control de flujo.
+Implementé los 3 estados (carga, error y vacío) usando los archivos especiales de Next.js (loading.tsx, error.tsx) en vez de manejar la lógica manualmente con useState, porque es el patrón recomendado por el framework y se integra automáticamente sin código adicional de control de flujo. Además, extraje la lógica de obtención de datos a una función asíncrona `getInspections()` que acepta un escenario (`ok`, `empty`, `error`), lo cual permite probarla de forma aislada con pruebas unitarias, sin depender de renderizar toda la página.
 
 - Prueba que ejecuté y resultado: 
-Verifiqué manualmente los 3 escenarios en el navegador (/, /?estado=vacio, /?estado=error) con npm run dev; los 3 se mostraron correctamente.
+Verifiqué manualmente los 3 escenarios en el navegador (/, /?estado=vacio, /?estado=error) con npm run dev; los 3 se mostraron correctamente. Además, creé la prueba unitaria `tests/inspections.test.ts` y la ejecuté con `npm run test:unit` (Jest): las 3 pruebas pasaron correctamente (escenario "ok" regresa las 3 inspecciones, "empty" regresa un arreglo vacío, y "error" lanza el error esperado). El resultado completo fue "Test Suites: 2 passed, 2 total. Tests: 4 passed, 4 total" (incluyendo también la prueba del App Shell de mi compañera).
+
+- Qué verifica esa prueba y qué no verifica:
+La prueba unitaria verifica que la función `getInspections()` regrese los datos correctos según cada escenario simulado. No verifica que la interfaz visual (page.tsx) renderice correctamente esos datos en pantalla, ni el comportamiento del navegador ante una conexión real intermitente, ya que eso se validó únicamente de forma manual en el navegador.
 
 - Limitación o fallo diagnosticado: 
-Los estados de vacío y error se activan por parámetro de URL, no por una condición de red real, ya que el proyecto aún no está conectado a un backend.
+Los estados de vacío y error se activan por parámetro de URL, no por una condición de red real, ya que el proyecto aún no está conectado a un backend. Además, al ejecutar `npm ci` después de que se agregó Jest al proyecto, se reportaron 2 vulnerabilidades (1 alta y 1 crítica) en dependencias del starter, que no se corrigieron por no ser parte del alcance de esta semana.
 
 - Cambio que podría defender o modificar en vivo: 
-Podría explicar cómo cambiar el tiempo de demora simulada (NETWORK_DELAY_MS) o cómo agregar un nuevo escenario adicional a getInspections().
+Podría explicar y modificar en vivo el tiempo de demora simulada (NETWORK_DELAY_MS) en src/lib/data/inspections.ts, cambiando ese número para que la carga tarde más o menos tiempo.
 
 - Uso declarado de IA: 
-Usé Claude (Anthropic) para diseñar la estructura de los 3 estados usando las convenciones de Next.js (loading.tsx, error.tsx) y para redactar esta evidencia y el README. Validé personalmente cada estado ejecutando el proyecto y navegando a las 3 URLs.
+Usé Claude (Anthropic) para diseñar la estructura de los 3 estados usando las convenciones de Next.js (loading.tsx, error.tsx), para diseñar la prueba unitaria de la función getInspections(). Validé personalmente cada estado ejecutando el proyecto y navegando a las 3 URLs, y ejecuté las pruebas unitarias confirmando que pasaran correctamente antes de documentarlo aquí.
 
 
 ## Integrante: Katherine Daniela Gómez Merino
