@@ -149,7 +149,7 @@
 
 ## Integrante: Rita González Sánchez
 
-- Commit SHA evaluado: (lo obtendrás después de tu próximo commit)
+- Commit SHA evaluado: 
 
 - Decisión técnica que puedo explicar: 
 Implementé los 3 estados usando los archivos especiales de Next.js (loading.tsx, error.tsx) en vez de manejar la lógica manualmente con useState, porque es el patrón recomendado por el framework y se integra automáticamente sin código adicional de control de flujo.
