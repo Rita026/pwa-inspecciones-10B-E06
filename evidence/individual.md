@@ -191,12 +191,45 @@ Resultados:
 - Uso declarado de IA (herramienta, propósito, validación): Utilice ChatGPT como apoyo para estructurar/revisar la implementación y las pruebas, pero revise el código, corregí la codificación, ejecute las pruebas y valide el resultado.
 
 
-## Integrante:
-- Commit SHA evaluado:
+## Integrante: Enrique Julian Gracia López
+
+- Commit SHA evaluado: `b93bfe27133c4d5a7deb8d4175af94c2d5f30adb`
+
 - Decisión técnica que puedo explicar:
+  Definí el manifest de la PWA con `display: "standalone"` para que, al ser
+  instalada desde un navegador compatible, se abra como aplicación y no como
+  una pestaña convencional. Establecí `start_url`, `scope` e `id` en la raíz
+  (`/`) porque la aplicación actual se publica desde esa ruta. Conservé los
+  colores del shell (`#f4f7fb` y `#3156d3`) y declaré los íconos existentes de
+  192x192 y 512x512 px; el de 512 px también es `maskable` para adaptarse a
+  los recortes de icono que aplica el sistema operativo. Finalmente conecté el
+  manifest desde `src/app/layout.tsx` mediante
+  `manifest: "/manifest.webmanifest"`.
+
 - Prueba que ejecuté y resultado:
+  Ejecuté `npm.cmd run test:unit`: Jest ejecutó 3 suites y 7 pruebas, todas
+  aprobadas. La suite `tests/manifest.spec.ts` verifica que el layout publique
+  el manifest, que la identidad, rutas, modo de visualización y colores sean
+  los esperados y que existan las declaraciones de ambos íconos. También
+  ejecuté `npm.cmd run verify`: la prueba proporcionada por el starter y el
+  build de producción de Next.js terminaron correctamente; el reporte indicó
+  `Verificación técnica: pass`.
+
 - Limitación o fallo diagnosticado:
+  El manifest permite que un navegador compatible reconozca la aplicación para
+  su instalación, pero aún no existe un service worker ni una estrategia de
+  caché. Por ello no se ha implementado ni comprobado el uso sin conexión, la
+  persistencia local o la sincronización de inspecciones.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo modificar los campos del manifest —por ejemplo los colores, la ruta de
+  inicio, el modo de visualización o las declaraciones de íconos— y actualizar
+  la prueba correspondiente para mantener esos requisitos comprobables.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Codex (OpenAI) para revisar los campos necesarios del manifest, crear la
+  prueba automatizada y comprobar la integración con el layout. Revisé los
+  cambios y validé personalmente el resultado al ejecutar `npm.cmd run
+  test:unit` y `npm.cmd run verify`, ambos con resultado satisfactorio.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
