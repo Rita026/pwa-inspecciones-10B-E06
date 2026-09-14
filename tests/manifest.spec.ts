@@ -20,6 +20,7 @@ type WebManifest = {
 };
 
 const manifestPath = resolve(process.cwd(), "public", "manifest.webmanifest");
+const layoutPath = resolve(process.cwd(), "src", "app", "layout.tsx");
 
 async function readManifest(): Promise<WebManifest> {
   const content = await readFile(manifestPath, "utf8");
@@ -27,6 +28,12 @@ async function readManifest(): Promise<WebManifest> {
 }
 
 describe("manifest.webmanifest", () => {
+  it("se publica desde el layout de Next.js", async () => {
+    const layout = await readFile(layoutPath, "utf8");
+
+    expect(layout).toContain('manifest: "/manifest.webmanifest"');
+  });
+
   it("define la identidad y el modo instalable de la aplicación", async () => {
     const manifest = await readManifest();
 
