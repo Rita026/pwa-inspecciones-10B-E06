@@ -237,13 +237,55 @@ Resultados:
 
 # Semana 3 — Evidencia individual
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
+
 - Commit SHA evaluado:
+  `107da5005a2d18893018b7a565d21e600f6f4d4d`
+
 - Decisión técnica que puedo explicar:
+  Implementé el service worker con una caché de aplicación única llamada
+  `inspecciones-cache-v1`. Durante `install` guarda desde el inicio la página
+  principal (`/`), el manifest publicado (`/manifest.webmanifest`) y el
+  fallback (`/offline.html`). Para las navegaciones usa red primero: si la red
+  falla, responde con la página principal guardada y, si esa copia no existe,
+  con la página sin conexión. En `activate` elimina exclusivamente cachés
+  antiguas cuyo nombre inicia con `inspecciones-cache-`, sin afectar posibles
+  cachés ajenas del mismo origen. No forcé `skipWaiting`, por lo que una nueva
+  versión espera a que las pestañas que usan la anterior terminen antes de
+  tomar control; esto evita interrumpir una sesión abierta durante una
+  actualización.
+
 - Prueba que ejecuté y resultado:
+  Ejecuté `npm.cmd ci --ignore-scripts --no-audit --no-fund`, que reinstaló las
+  dependencias desde el lockfile sin modificarlo. Después ejecuté `npm.cmd run
+  test:unit -- --runInBand`: Jest aprobó 4 suites y 11 pruebas. La nueva suite
+  `tests/service-worker.spec.ts` simula los eventos `install`, `activate` y
+  `fetch` del service worker; verifica la precarga de los tres recursos, la
+  eliminación selectiva de cachés antiguas, el fallback a inicio y después a
+  offline, y el registro de `/sw.js` con scope `/`. Finalmente ejecuté
+  `npm.cmd run verify`: la prueba inicial y el build de producción de Next.js
+  terminaron correctamente con `Verificación técnica: pass`.
+
 - Limitación o fallo diagnosticado:
+  Las pruebas del worker usan dobles de prueba para Cache Storage y red, por
+  lo que aún no sustituyen una validación manual en Chrome/Edge con DevTools en
+  modo offline e instalación real. Esta entrega solo conserva el shell inicial:
+  no persiste nuevos datos de inspecciones, no sincroniza cambios y no muestra
+  una notificación visual cuando exista una nueva versión. Además, mientras
+  haya una pestaña controlada por una versión anterior, la actualización queda
+  en espera deliberadamente hasta que pueda activarse de forma segura.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo cambiar los recursos de `APP_SHELL`, el nombre o versión de la caché,
+  o el orden de fallback en `public/sw.js`, y ajustar la prueba simulada para
+  demostrar el comportamiento esperado. También puedo cambiar el scope o el
+  momento de registro desde `src/lib/pwa/register-service-worker.ts`.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Codex (OpenAI) para analizar el alcance, proponer la estrategia de caché,
+  implementar el service worker y redactar pruebas reproducibles. Revisé los
+  cambios generados y validé el resultado con los comandos indicados arriba:
+  instalación limpia, pruebas unitarias y build/verificación de producción.
 
 
 ## Integrante:
