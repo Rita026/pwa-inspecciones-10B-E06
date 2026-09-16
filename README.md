@@ -61,8 +61,8 @@ El starter todavía no implementa instalación PWA, offline ni sincronización. 
 
 ## Qué se agregó esta semana
 
-- `src/components/app-shell.tsx` y cambios en `src/app/layout.tsx`: estructura de navegación general del shell instalable (a cargo de otro integrante del equipo).
-- `public/manifest.webmanifest` y `tests/manifest.spec.ts`: manifest de la PWA con nombre, íconos, display y su prueba correspondiente (a cargo de otro integrante del equipo).
+- `src/components/app-shell.tsx` y cambios en `src/app/layout.tsx`: estructura de navegación general del shell instalable.
+- `public/manifest.webmanifest` y `tests/manifest.spec.ts`: manifest de la PWA con nombre, íconos, display y su prueba correspondiente.
 - `src/app/page.tsx`, `src/app/loading.tsx` y `src/app/error.tsx`: estados de carga, error y vacío para la página principal.
 
 ## Ejecución
@@ -103,3 +103,61 @@ Ambos comandos revisan que existan los archivos obligatorios de esta semana (`pu
 
 Ver `evidence/individual.md`, sección "Semana 2 — Evidencia individual", con la contribución de cada integrante para esta semana.
 
+
+-------------------------------------------------------------------------------------------------
+
+# Semana 3 — Service Worker, caché y funcionamiento offline
+
+## Qué se agregó esta semana
+
+- `public/sw.js`: Service Worker que guarda en caché la página principal, el manifest y la página offline; borra cachés viejas al actualizar; y responde con contenido guardado cuando falla la red.
+- `src/lib/pwa/register-service-worker.ts`: registro del Service Worker desde la aplicación.
+- `docs/cache-strategy.md`: documento con la estrategia de caché elegida y sus trade-offs.
+- `public/offline.html`: página de respaldo que se muestra cuando no hay conexión ni contenido guardado.
+- `tests/offline.spec.ts` y `tests/service-worker.spec.ts`: pruebas del comportamiento del Service Worker y del fallback offline.
+
+## Ejecución
+
+```bash
+npm ci
+npm run dev
+```
+
+Abran `http://localhost:3000`. Para probar el comportamiento offline manualmente:
+
+1. Abran las herramientas de desarrollador del navegador (F12)
+2. Vayan a la pestaña "Application" (o "Aplicación")
+3. En "Service Workers", confirmen que esté registrado y activo
+4. Marquen la casilla "Offline" (o usen la pestaña "Network"/"Red" para simular sin conexión)
+5. Recarguen la página: debería mostrarse el contenido guardado o, si no existe, la página `/offline.html`
+
+## Supuestos
+
+- Se usa una estrategia de caché con nombre versionado (`inspecciones-cache-v1`), de forma que al actualizar el Service Worker a una versión nueva, se eliminan automáticamente las cachés de versiones anteriores del proyecto.
+- Solo se guarda en caché la página principal (`/`), el manifest (`/manifest.webmanifest`) y la página de respaldo (`/offline.html`); no se cachean otros recursos dinámicos en esta etapa.
+- El Service Worker solo intercepta peticiones de **navegación** (cargar una página completa); otras peticiones (imágenes, scripts, etc.) se dejan pasar sin intervención por ahora.
+- El comportamiento offline se probó únicamente en un entorno de desarrollo local; no se ha validado en un despliegue de producción.
+
+## Verificación
+
+```bash
+npm run verify
+```
+
+o bien:
+
+```bash
+bash public-tests/check.sh
+```
+
+Ambos comandos revisan que existan los archivos obligatorios de esta semana (`public/sw.js`, `src/lib/pwa/register-service-worker.ts`, `docs/cache-strategy.md`, `tests/service-worker.spec.ts`, `tests/offline.spec.ts`) y que el proyecto compile correctamente.
+
+```bash
+npm run test:unit
+```
+
+Ejecuta todas las pruebas unitarias del proyecto, incluyendo las de esta semana.
+
+## Evidencia
+
+Ver `evidence/individual.md`, sección "Semana 3 — Evidencia individual", con la contribución de cada integrante para esta semana.
