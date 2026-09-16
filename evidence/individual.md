@@ -283,7 +283,7 @@ Resultados:
 
 - Uso declarado de IA (herramienta, propósito, validación):
   Usé Codex (OpenAI) para analizar el alcance, proponer la estrategia de caché,
-  implementar el service worker y redactar pruebas reproducibles. Revisé los
+  verificar el service worker y redactar pruebas reproducibles. Revisé los
   cambios generados y validé el resultado con los comandos indicados arriba:
   instalación limpia, pruebas unitarias y build/verificación de producción.
 
