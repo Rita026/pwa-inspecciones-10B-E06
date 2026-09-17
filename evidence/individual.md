@@ -288,13 +288,46 @@ Resultados:
   instalación limpia, pruebas unitarias y build/verificación de producción.
 
 
-## Integrante:
-- Commit SHA evaluado:
+## Integrante: Rita González Sánchez
+
+- Commit SHA evaluado: f6490fabfa20575333105d7b1ea04f4fac7727e3
+
 - Decisión técnica que puedo explicar:
+Creé la página de respaldo `public/offline.html` como un archivo HTML estático simple
+(sin depender de React ni de Next.js), porque el Service Worker necesita poder mostrarla
+incluso cuando falla la red y no hay forma de renderizar componentes dinámicos en ese
+momento; un HTML plano garantiza que siempre esté disponible desde la caché.
+
 - Prueba que ejecuté y resultado:
+Creé `tests/offline.spec.ts`, que simula el entorno de un Service Worker (self, caches,
+fetch) para probar el comportamiento de `public/sw.js` sin necesidad de un navegador real.
+Ejecuté `npm run test:unit` y las 4 pruebas de este archivo pasaron correctamente, junto
+con las demás pruebas del equipo (Test Suites: 5 passed, 5 total; Tests: 15 passed, 15 total).
+
+- Qué verifica esa prueba y qué no verifica:
+Verifica que el Service Worker guarde en caché los archivos correctos durante "install",
+que borre únicamente las cachés viejas del proyecto durante "activate" (sin tocar cachés
+ajenas), y que responda con contenido cacheado cuando la red falla en una navegación, así
+como que no intercepte peticiones que no son de navegación. No verifica el comportamiento
+en un navegador real ni en un despliegue de producción, ya que usa un entorno simulado.
+
 - Limitación o fallo diagnosticado:
+El Service Worker actual solo cachea 3 archivos fijos (la página principal, el manifest y
+la página offline); no cachea otros recursos dinámicos ni datos que se generen después de
+la carga inicial. Esto significa que si el usuario navega a otra parte de la app sin haber
+tenido conexión antes, no habrá contenido guardado para mostrarle.
+
 - Cambio que podría defender o modificar en vivo:
+Podría explicar y modificar en vivo el contenido de `public/offline.html` (el mensaje que
+se muestra), o el número de versión de la caché en `sw.js` (cambiar "v1" por "v2" para
+forzar una actualización).
+
 - Uso declarado de IA (herramienta, propósito, validación):
+Usé Claude (Anthropic) para diseñar la página de respaldo offline, para construir la prueba
+`tests/offline.spec.ts` de forma compatible con la implementación real de `sw.js` de mi
+compañero Enrique, y para redactar esta evidencia y la sección del README de esta semana.
+Validé personalmente ejecutando `npm run test:unit` y confirmando que todas las pruebas
+pasaran correctamente antes de documentarlo aquí.
 
 ## Integrante:
 - Commit SHA evaluado:
