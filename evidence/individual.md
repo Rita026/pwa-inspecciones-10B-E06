@@ -329,13 +329,40 @@ compañero Enrique, y para redactar esta evidencia y la sección del README de e
 Validé personalmente ejecutando `npm run test:unit` y confirmando que todas las pruebas
 pasaran correctamente antes de documentarlo aquí.
 
-## Integrante:
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
+## Integrante: Katherine Daniela Gómez Merino
+
+- Commit SHA evaluado: `f5c8b55f8a6ac8ee53d2e46eeb12b10cb8ebfad6`
+
+- Decisión técnica que puedo explicar: 
+Documenté la estrategia de caché utilizada por el Service Worker en docs/cache-strategy.md. 
+La decisión principal es utilizar una estrategia Network First para las solicitudes de navegación: 
+primero se intenta obtener la página desde la red y, si no hay conexión, se consulta la caché. 
+El fallback utiliza primero la página principal / y, si no está disponible, offline.html. 
+También documenté el uso de una caché versionada (inspecciones-cache-v1) y la eliminación de versiones anteriores 
+durante activate, para evitar conservar recursos obsoletos.
+
 - Prueba que ejecuté y resultado:
+Ejecuté npm run test:unit -- --runInBand y las 5 suites pasaron correctamente, con 15 pruebas aprobadas 
+y 0 fallos. Después ejecuté npm run verify, que completó correctamente la prueba inicial y 
+el build de producción de Next.js, mostrando Verificación técnica: pass.
+
 - Limitación o fallo diagnosticado:
+La estrategia actual está limitada a las solicitudes de navegación. No implementa una estrategia 
+específica para APIs, imágenes u otros recursos individuales, ni sincronización de datos cuando 
+vuelve la conexión. Además, el contenido disponible sin conexión depende de los recursos que fueron 
+incluidos previamente en el App Shell.
+
 - Cambio que podría defender o modificar en vivo:
+Puedo modificar en vivo la estrategia documentada, por ejemplo cambiar los recursos incluidos en el 
+App Shell, actualizar la versión de la caché de inspecciones-cache-v1 a inspecciones-cache-v2, modificar 
+el orden del fallback o documentar una estrategia específica para otro tipo de recurso, explicando 
+qué efecto tendría cada cambio en el comportamiento offline.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+Usé ChatGPT (OpenAI) para analizar la implementación existente del Service Worker, ayudar a estructurar
+ y redactar la documentación de la estrategia de caché y revisar que la explicación correspondiera con el código real. 
+ Validé personalmente el contenido revisando los archivos del proyecto y ejecutando npm run test:unit -- --runInBand 
+ y npm run verify, cuyos resultados fueron correctos.
 
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
