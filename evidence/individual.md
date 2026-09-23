@@ -409,14 +409,51 @@ Validé personalmente cada uno de los 3 estados probándolos en el navegador ant
 documentarlos aquí.
 
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
 
 - Commit SHA evaluado:
+  `dd966ab901f69bf81633bf2c267728ca1468c285` (`feat: agregar listado SSR de
+  inspecciones`).
+
 - Decisión técnica que puedo explicar:
+  Implementé `/inspecciones` como un Server Component asíncrono, sin
+  `"use client"`, que llama directamente a `getInspections()` desde
+  `src/lib/data/inspections.ts`. Declaré `dynamic = "force-dynamic"` para que
+  Next.js lo renderice en el servidor en cada solicitud; sin esa configuración,
+  como los datos sintéticos no dependen de una API dinámica, Next.js podría
+  prerenderizar la ruta como estática. Cada tarjeta usa `next/link` hacia
+  `/inspecciones/[id]`, conserva semántica de lista y ofrece un nombre accesible
+  para abrir el detalle.
+
 - Prueba que ejecuté y resultado:
+  Ejecuté `npm.cmd run test:unit -- --runInBand`: las 5 suites y las 15 pruebas
+  aprobaron. Esta suite comprueba los escenarios `ok`, `empty` y `error` de
+  `getInspections()` y los componentes existentes. También ejecuté `npm.cmd run
+  verify`, equivalente a `make verify` en este repositorio: la prueba del
+  starter mostró `PASS` y el build de producción finalizó correctamente. La
+  salida de Next identificó `/inspecciones` como `ƒ Dynamic (server-rendered on
+  demand)`. Finalmente, inicié el build de producción, consulté
+  `/inspecciones` y recibí HTTP 200 con los tres laboratorios y los enlaces
+  `/inspecciones/inspection-001`, `/inspection-002` y `/inspection-003`.
+
 - Limitación o fallo diagnosticado:
+  La fuente de datos sigue siendo sintética y espera 600 ms de forma simulada;
+  por tanto, el tiempo observado no representa una base de datos ni la latencia
+  de un servicio real. El estado de error del listado depende de una falla que
+  lance `getInspections()` y lo captura el límite de error global de la
+  aplicación; no se implementó reintento ni conectividad real en esta ruta.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo explicar o ajustar `dynamic = "force-dynamic"`, la estructura semántica
+  del listado y las rutas generadas por cada `Link`. También puedo sustituir la
+  fuente sintética por una función de servidor que conserve el mismo contrato
+  `Promise<Inspection[]>` sin convertir la página en cliente.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Codex (OpenAI) para revisar la estructura existente, proponer la ruta SSR,
+  mejorar la accesibilidad de las tarjetas enlazadas y redactar esta evidencia.
+  Revisé personalmente los cambios, los datos sintéticos y los resultados de
+  las verificaciones antes de incorporarlos al repositorio.
 
 
 ## Integrante:
