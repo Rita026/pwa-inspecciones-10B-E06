@@ -73,3 +73,10 @@ export type InspectionScenario = "ok" | "empty" | "error";
     return inspections;
 }
 
+export async function getInspectionById(
+  id: string,
+  scenario: InspectionScenario = "ok"
+): Promise<Inspection | null> {
+  const list = await getInspections(scenario);
+  return list.find((item) => item.id === id) ?? null;
+}
