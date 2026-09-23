@@ -72,3 +72,4 @@ export type InspectionScenario = "ok" | "empty" | "error";
 
     return inspections;
 }
+
