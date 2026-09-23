@@ -38,6 +38,11 @@ h3 { font-size: 1.2rem; margin: 20px 0 8px; }
 .section-heading .eyebrow { color: var(--accent); }
 .count { background: var(--accent-soft); border-radius: 999px; color: var(--accent); font-size: .85rem; font-weight: 700; padding: 8px 12px; }
 .inspection-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.inspection-list { list-style: none; margin: 22px 0 0; padding: 0; }
+.inspection-link { color: inherit; display: block; height: 100%; text-decoration: none; }
+.inspection-link .inspection-card { height: 100%; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.inspection-link:hover .inspection-card { border-color: var(--accent); box-shadow: 0 10px 26px rgba(49, 86, 211, .16); transform: translateY(-2px); }
+.inspection-link:focus-visible { border-radius: 16px; outline: 3px solid var(--accent); outline-offset: 3px; }
 .inspection-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 7px 20px rgba(36, 55, 95, .06); padding: 22px; }
 .card-topline { align-items: center; display: flex; justify-content: space-between; gap: 10px; }
 .badge { border-radius: 999px; font-size: .75rem; font-weight: 700; padding: 5px 9px; }
