@@ -456,13 +456,35 @@ documentarlos aquí.
   las verificaciones antes de incorporarlos al repositorio.
 
 
-## Integrante:
+## Integrante: Katherine Daniela Gómez Merino
 
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
-- Limitación o fallo diagnosticado:
-- Cambio que podría defender o modificar en vivo:
-- Uso declarado de IA (herramienta, propósito, validación):
+- Commit SHA evaluado: ed73f778c90fcf859bb3e82a59fca2a25a8d0bdf
+
+- Decisión técnica que puedo explicar: 
+Comparé CSR y SSR y documenté la decisión de utilizar SSR para el listado /inspecciones y 
+CSR para el detalle /inspecciones/[id]. El listado obtiene los datos mediante getInspections() 
+en el servidor y utiliza force-dynamic, mientras que el detalle utiliza un Client Component 
+con useEffect, useState, useParams y fetch() para consultar el API y controlar los estados de carga, 
+éxito, error y registro no encontrado.
+
+- Prueba que ejecuté y resultado: 
+Ejecuté npm run test:unit. El resultado fue 6 suites aprobadas, 
+18 pruebas aprobadas, 0 fallos. La prueba tests/rendering.spec.ts también pasó correctamente.
+
+- Limitación o fallo diagnosticado: 
+La prueba automatizada de tests/rendering.spec.ts verifica las características principales 
+de las implementaciones CSR y SSR mediante sus archivos fuente. No sustituye una prueba de
+integración ejecutando la aplicación completa en un navegador ni una medición de rendimiento 
+en producción. Además, el proyecto utiliza datos sintéticos.
+
+- Cambio que podría defender o modificar en vivo: Puedo explicar y modificar la estrategia 
+de renderizado de cada ruta. Por ejemplo, puedo justificar por qué el listado utiliza SSR
+y por qué el detalle utiliza CSR, así como modificar las pruebas para comprobar cambios en 
+los estados de carga, error o registro no encontrado.
+
+- Uso declarado de IA (herramienta, propósito, validación): Se utilizó ChatGPT como apoyo 
+para estructurar la documentación de la comparación CSR vs SSR, proponer la estructura de 
+las pruebas y revisar la redacción. Los cambios fueron revisados y adaptados al código real 
+del repositorio. La validación se realizó ejecutando npm run test:unit, obteniendo 6 suites y 18 pruebas aprobadas.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
