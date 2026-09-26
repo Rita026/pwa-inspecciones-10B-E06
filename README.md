@@ -161,3 +161,48 @@ Ejecuta todas las pruebas unitarias del proyecto, incluyendo las de esta semana.
 ## Evidencia
 
 Ver `evidence/individual.md`, sección "Semana 3 — Evidencia individual", con la contribución de cada integrante para esta semana.
+
+# Semana 4 — Renderizado CSR y SSR
+
+## Qué se agregó esta semana
+
+Se compararon dos estrategias de renderizado para las pantallas de inspecciones:
+
+* `/inspecciones`: listado implementado con SSR.
+* `/inspecciones/[id]`: detalle implementado con CSR.
+
+También se documentó la decisión técnica en `docs/rendering-decision.md` y se agregó `tests/rendering.spec.ts` para verificar las características principales de ambas implementaciones.
+
+## Decisión de renderizado
+
+El listado utiliza SSR porque obtiene las inspecciones mediante `getInspections()` en el servidor y está configurado con `dynamic = "force-dynamic"`.
+
+El detalle utiliza CSR porque es un Client Component y obtiene la inspección mediante `fetch()` desde el navegador. También controla los estados de carga, éxito, error y registro no encontrado.
+
+La comparación completa, incluyendo ventajas, desventajas, supuestos y limitaciones, está documentada en:
+
+`docs/rendering-decision.md`
+
+## Verificación
+
+Para ejecutar las pruebas unitarias:
+
+```bash
+npm run test:unit
+```
+
+Para ejecutar la verificación general del proyecto:
+
+```bash
+npm run verify
+```
+
+La prueba específica de esta semana se encuentra en:
+
+`tests/rendering.spec.ts`
+
+## Limitaciones
+
+La comparación utiliza las tres inspecciones sintéticas existentes en el proyecto. No representa una medición de rendimiento en producción ni utiliza una base de datos real.
+
+La estrategia puede revisarse posteriormente si cambian los requisitos de actualización de datos, interactividad o fuente de información.
