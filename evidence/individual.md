@@ -371,7 +371,7 @@ Usé ChatGPT (OpenAI) para analizar la implementación existente del Service Wor
 
 ## Integrante: Rita González Sánchez
 
-- Commit SHA evaluado: 5f049abdc79d42c8d130c6250f7fcfd060e34495
+- Commit SHA evaluado: abc309117bac8e39aa586d5908e9cc364b3ebd3b
 
 - Decisión técnica que puedo explicar:
 Implementé la ruta de detalle (`/inspecciones/[id]`) usando CSR (Client-Side Rendering):
@@ -382,32 +382,39 @@ carga mientras espera. Elegí crear una API route separada (en vez de llamar dir
 pueden ejecutar directamente en el navegador; la API actúa como puente entre ambos lados.
 
 - Prueba que ejecuté y resultado:
-Probé manualmente los 3 estados de la ruta en el navegador: con datos válidos
-(`/inspecciones/inspection-001`, mostró la información correcta junto con el tiempo de
-carga medido en milisegundos), con error forzado (`/inspecciones/inspection-001?estado=error`,
-mostró el mensaje de error), y con un id inexistente (`/inspecciones/no-existe`, mostró
-"Inspección no encontrada"). Los 3 casos funcionaron correctamente.
+Probé manualmente los 3 estados de la ruta en el navegador: con datos válidos, con error
+forzado y con un id inexistente; los 3 funcionaron correctamente. Además, creé
+`tests/inspection-api.test.ts`, que ejecuta directamente la función `GET` de mi API
+(sin necesidad de un navegador) y confirma 3 casos: responde 200 con los datos correctos,
+404 cuando el id no existe, y 500 cuando se fuerza el escenario de error. Ejecuté
+`npm run test:unit` y las 3 pruebas pasaron, junto con las demás del equipo
+(Test Suites: 7 passed, 7 total; Tests: 21 passed, 21 total).
+
+- Qué verifica esa prueba y qué no verifica:
+Verifica que mi API responda con el código de estado correcto (200, 404, 500) y con los
+datos esperados en cada caso, ejecutando la función real del servidor. No verifica el
+comportamiento visual de la página (eso se probó manualmente en el navegador), ni el
+rendimiento bajo carga con múltiples usuarios simultáneos.
 
 - Limitación o fallo diagnosticado:
 Al probar el estado de error por primera vez, detecté que el parámetro `?estado=error` de
 la URL no se reenviaba a la petición interna hacia la API, por lo que el error nunca se
-activaba. Lo corregí leyendo `window.location.search` y agregándolo a la URL del fetch.
-Además, el tiempo de carga medido (varios segundos) refleja la demora de red simulada que
-ya existía en el proyecto desde semanas anteriores, no representa una latencia real de
-producción.
+activaba; lo corregí leyendo `window.location.search`. Después, al crear la prueba de la
+API, Jest falló con "ReferenceError: Request is not defined", porque el entorno de pruebas
+del equipo (jsdom) no incluye los objetos Request/Response de las API routes de Next.js.
+Lo resolví agregando `@jest-environment node` al inicio de mi archivo de prueba, afectando
+solo ese archivo, sin tocar la configuración general ni las pruebas de mis compañeros.
 
 - Cambio que podría defender o modificar en vivo:
 Podría explicar y modificar en vivo el manejo del parámetro de error en la API
-(`src/app/api/inspecciones/[id]/route.ts`), o el contenido y estilo del componente
-`loading-state.tsx` que se reutiliza mientras se cargan los datos.
+(`src/app/api/inspecciones/[id]/route.ts`), el contenido del componente `loading-state.tsx`.
 
 - Uso declarado de IA (herramienta, propósito, validación):
 Usé Claude (Anthropic) para diseñar la arquitectura de la ruta CSR (API interna +
-componente cliente), para escribir el código de `route.ts`, `loading-state.tsx` y
-`[id]/page.tsx`, y para diagnosticar y corregir el error del parámetro no reenviado.
-Validé personalmente cada uno de los 3 estados probándolos en el navegador antes de
-documentarlos aquí.
-
+componente cliente), para diagnosticar y corregir el error del parámetro no reenviado, y
+para resolver el error de entorno de Jest en mi prueba de la API. Validé personalmente
+cada estado en el navegador y confirmé que todas las pruebas pasaran correctamente
+(`npm run test:unit`) antes de documentarlo aquí.
 
 ## Integrante: Enrique Julian Gracia López
 
