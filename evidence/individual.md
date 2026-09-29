@@ -536,14 +536,51 @@ gane la versión del servidor en vez de la local.
 Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica de la cola de sincronización con reintentos y la política de resolución de conflictos, así como para comprender por qué IndexedDB es más adecuado que localStorage para este caso. Posteriormente validé la implementación ejecutando las pruebas unitarias del proyecto (npm run test:unit), verificando que todas las pruebas pasaran correctamente.
 
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
 
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
+- Commit SHA de implementación: `0bd9d5fbd2b9e501e7e0e5dce9d6a043dead423e`.
+  El SHA final del repositorio se entrega después del commit de esta evidencia.
+
+- Contribución y decisión técnica que puedo explicar:
+  Integré un panel cliente en la portada que usa la cola existente para crear
+  una inspección sintética, contar las no confirmadas y simular su envío. Corregí
+  la cola para reintentar registros en `error`, recuperar los que quedaron en
+  `syncing` y limitar a tres intentos iniciados. El `localId` se conserva en
+  cada reintento; un receptor real debe imponer unicidad por esa clave. Elegí
+  mostrar también los errores agotados en el contador para no ocultar trabajo
+  sin confirmar. La política Last Write Wins queda definida y probada como
+  función pura, a la espera de un servidor que proporcione versiones remotas.
+
+- Prueba ejecutada y resultado observado:
+  Codex ejecutó `npm.cmd ci` y `npm.cmd run verify` en Windows. La instalación
+  terminó; `verify` aprobó estructura, prueba inicial, 9 suites Jest con 32
+  pruebas y build de producción. `tests/sync.spec.ts` reproduce persistencia,
+  reintentos, respuesta perdida, límite de intentos, recuperación y conflictos
+  con IndexedDB simulado. `tests/sync-demo-panel.test.tsx` comprueba el flujo
+  crear → 1 pendiente → sincronizar → 0. La ruta principal del build devolvió
+  HTTP 200 y el HTML contenía el panel y sus botones. Estas pruebas no
+  comprueban un navegador real ni la entrega a un servidor.
+
 - Limitación o fallo diagnosticado:
+  El panel usa un remitente simulado: `synced` no significa persistencia remota.
+  No hay deduplicación ni resolución de conflictos extremo a extremo sin un
+  backend. El Service Worker no precachea el JavaScript del panel para recarga
+  totalmente offline; la protección contra dos ejecuciones simultáneas solo
+  cubre una pestaña. No hubo un navegador disponible en este entorno para
+  comprobar visualmente los clics. `npm ci` informó un aviso alto y uno crítico
+  de dependencias, sin impedir la verificación.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo mostrar cómo `MAX_RETRIES` afecta la cola, por qué el contador incluye
+  errores y cómo el receptor debe devolver el mismo `serverId` para un
+  `localId` repetido. También puedo explicar por qué el demo no equivale a un
+  servidor real.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Codex (OpenAI) para revisar el proyecto, corregir la cola, crear el
+  panel, redactar la política y escribir las pruebas. Codex ejecutó los
+  comandos y revisó sus resultados; mi revisión personal de los cambios y del
+  panel queda pendiente y debe completarse antes de la entrega académica.
 
 
 ## Integrante:
