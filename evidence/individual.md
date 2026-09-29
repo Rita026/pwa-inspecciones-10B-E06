@@ -539,7 +539,6 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 ## Integrante: Enrique Julian Gracia López
 
 - Commit SHA de implementación: `0bd9d5fbd2b9e501e7e0e5dce9d6a043dead423e`.
-  El SHA final del repositorio se entrega después del commit de esta evidencia.
 
 - Contribución y decisión técnica que puedo explicar:
   Integré un panel cliente en la portada que usa la cola existente para crear
