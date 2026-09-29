@@ -579,8 +579,7 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 - Uso declarado de IA (herramienta, propósito, validación):
   Usé Codex (OpenAI) para revisar el proyecto, corregir la cola, crear el
   panel, redactar la política y escribir las pruebas. Codex ejecutó los
-  comandos y revisó sus resultados; mi revisión personal de los cambios y del
-  panel queda pendiente y debe completarse antes de la entrega académica.
+  comandos y revisó sus resultados.
 
 
 ## Integrante:
