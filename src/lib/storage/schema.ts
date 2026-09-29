@@ -13,9 +13,9 @@ export type LocalInspection = {
   statusLabel: string;
   findings: number;
   summary: string;
-  updatedAt: number;        // timestamp de la última modificación (para resolver conflictos)
+  updatedAt: number;        // fecha de edición, no cambia durante los reintentos
   syncStatus: "pending" | "syncing" | "synced" | "error";
-  retryCount: number;       // cuántas veces se ha intentado enviar
+  retryCount: number;       // intentos iniciados, exitosos o fallidos (máximo 3)
 };
 
 interface InspeccionesDB extends DBSchema {
@@ -31,7 +31,7 @@ const DB_VERSION = 1;
 
 let dbPromise: Promise<IDBPDatabase<InspeccionesDB>> | null = null;
 
-export function getDB() {
+export function getDB(): Promise<IDBPDatabase<InspeccionesDB>> {
   if (!dbPromise) {
     dbPromise = openDB<InspeccionesDB>(DB_NAME, DB_VERSION, {
       upgrade(db) {
@@ -40,6 +40,10 @@ export function getDB() {
         });
         store.createIndex("by-sync-status", "syncStatus");
       },
+    }).catch((error) => {
+      // Permite volver a abrir la base si la primera apertura falló.
+      dbPromise = null;
+      throw error;
     });
   }
   return dbPromise;

@@ -1,4 +1,5 @@
 import { getInspections, type InspectionScenario } from "../lib/data/inspections";
+import SyncDemoPanel from "../components/sync-demo-panel";
 
 type HomePageProps = {
   searchParams?: { estado?: string };
@@ -25,6 +26,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </p>
         <span className="status">Estado del starter: shell instalable · PWA en construcción</span>
       </header>
+
+      <SyncDemoPanel />
 
       <section aria-labelledby="inspections-heading" className="content-section">
         <div className="section-heading">

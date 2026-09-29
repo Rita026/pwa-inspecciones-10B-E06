@@ -1,12 +1,10 @@
 import { getDB, type LocalInspection } from "../storage/schema";
 
-const MAX_RETRIES = 3;
+export const MAX_RETRIES = 3;
 
-/**
- * Guarda una nueva inspección localmente con estado "pending".
- * Genera un localId único para poder identificarla siempre,
- * incluso antes de que el servidor la conozca.
- */
+export type SyncSummary = { synced: number; failed: number; skipped: number };
+
+/** Guarda la captura antes de intentar cualquier envío. El ID permanece en los reintentos. */
 export async function queueInspection(
   data: Omit<
     LocalInspection,
@@ -14,7 +12,6 @@ export async function queueInspection(
   >
 ): Promise<LocalInspection> {
   const db = await getDB();
-
   const record: LocalInspection = {
     ...data,
     localId: crypto.randomUUID(),
@@ -23,83 +20,81 @@ export async function queueInspection(
     updatedAt: Date.now(),
   };
 
-  await db.put("inspections", record);
+  // add falla ante un ID repetido; put sobrescribiría una captura existente.
+  await db.add("inspections", record);
   return record;
 }
 
-/**
- * Regresa todas las inspecciones que aún no se han sincronizado.
- */
+/** Devuelve todo lo no confirmado, incluso errores agotados, para no ocultar trabajo. */
 export async function getPendingInspections(): Promise<LocalInspection[]> {
   const db = await getDB();
-  const all = await db.getAllFromIndex("inspections", "by-sync-status", "pending");
-  return all;
+  const statuses = ["pending", "error", "syncing"] as const;
+  const groups = await Promise.all(
+    statuses.map((status) =>
+      db.getAllFromIndex("inspections", "by-sync-status", status)
+    )
+  );
+  return groups.flat().sort((a, b) => a.updatedAt - b.updatedAt);
 }
 
 /**
- * Tipo de función que representa "enviar al servidor". Se inyecta desde
- * afuera para poder probar la cola sin depender de una red real.
+ * El receptor debe tratar localId como clave de idempotencia y devolver el mismo
+ * resultado ante un reenvío. Sin esa garantía del receptor no hay deduplicación remota.
  */
 export type SyncSender = (
   record: LocalInspection
 ) => Promise<{ ok: boolean; serverId?: string }>;
 
-/**
- * Intenta sincronizar todas las inspecciones pendientes.
- * - Si el envío tiene éxito: marca la inspección como "synced" y guarda el serverId.
- * - Si falla: incrementa retryCount; si llega al máximo, marca "error" y deja de reintentar.
- * Es idempotente: cada registro se identifica por su localId, así que reintentar
- * un envío que ya se procesó en el servidor no debería crear una copia duplicada
- * (el servidor debe usar ese localId para deduplicar).
- */
-export async function syncPendingInspections(send: SyncSender): Promise<{
-  synced: number;
-  failed: number;
-  skipped: number;
-}> {
+async function runSync(send: SyncSender): Promise<SyncSummary> {
   const db = await getDB();
-  const pending = await getPendingInspections();
+  const outstanding = await getPendingInspections();
+  const summary: SyncSummary = { synced: 0, failed: 0, skipped: 0 };
 
-  let synced = 0;
-  let failed = 0;
-  let skipped = 0;
-
-  for (const record of pending) {
+  for (const record of outstanding) {
     if (record.retryCount >= MAX_RETRIES) {
-      skipped++;
+      summary.skipped++;
       continue;
     }
 
-    const updated: LocalInspection = { ...record, syncStatus: "syncing" };
-    await db.put("inspections", updated);
+    // También recupera un registro que quedó en "syncing" al cerrarse la pestaña.
+    // Se escribe antes de enviar para conservar el intento tras un cierre abrupto.
+    const attempted: LocalInspection = {
+      ...record,
+      syncStatus: "syncing",
+      retryCount: record.retryCount + 1,
+    };
+    await db.put("inspections", attempted);
 
     try {
-      const result = await send(updated);
-
+      const result = await send(attempted);
       if (result.ok) {
         await db.put("inspections", {
-          ...updated,
+          ...attempted,
           syncStatus: "synced",
           serverId: result.serverId,
         });
-        synced++;
+        summary.synced++;
       } else {
-        await db.put("inspections", {
-          ...updated,
-          syncStatus: "error",
-          retryCount: updated.retryCount + 1,
-        });
-        failed++;
+        await db.put("inspections", { ...attempted, syncStatus: "error" });
+        summary.failed++;
       }
     } catch {
-      await db.put("inspections", {
-        ...updated,
-        syncStatus: "error",
-        retryCount: updated.retryCount + 1,
-      });
-      failed++;
+      await db.put("inspections", { ...attempted, syncStatus: "error" });
+      summary.failed++;
     }
   }
 
-  return { synced, failed, skipped };
+  return summary;
+}
+
+// Dos clics en la misma pestaña comparten la ejecución y no envían dos veces.
+let activeSync: Promise<SyncSummary> | null = null;
+
+export function syncPendingInspections(send: SyncSender): Promise<SyncSummary> {
+  if (activeSync) return activeSync;
+
+  activeSync = runSync(send).finally(() => {
+    activeSync = null;
+  });
+  return activeSync;
 }

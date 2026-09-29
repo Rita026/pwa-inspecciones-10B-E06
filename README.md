@@ -1,6 +1,9 @@
 # PWA de inspecciones de laboratorio — proyecto del equipo
 
-Comiencen por `START_HERE.md` y lean `ACTIVIDAD-01.md`. Este es un proyecto acumulativo: un repositorio privado por equipo durante el curso. La Semana 1 consiste en arrancar, documentar y explicar la verificación; no en implementar toda la PWA.
+Este es un proyecto acumulativo de la PWA de inspecciones de laboratorio.
+`START_HERE.md` y `ACTIVIDAD-01.md` conservan las instrucciones de arranque de
+la Semana 1. Las secciones de cada semana registran lo implementado después;
+la entrega vigente es la Semana 5, descrita al final de este archivo.
 
 ## Entorno
 
@@ -11,7 +14,9 @@ Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub
 - npm: 10.8.1
 - Sistema operativo: Windows
 
-**Dificultades de entorno encontradas:** Ninguna. La instalación con `npm ci` mostró 2 advertencias de vulnerabilidades de severidad alta en dependencias del starter, pero no afectaron la instalación ni ejecución del proyecto.
+**Dificultades de entorno en la Semana 1:** La instalación de entonces mostró
+advertencias de dependencias; los resultados vigentes de Semana 5 se anotan
+en su sección.
 
 ## Ejecución
 
@@ -28,7 +33,7 @@ Abran `http://localhost:3000` y comprueben las tres inspecciones sintéticas. De
 npm run verify
 ```
 
-Ejecuta comprobación de archivos, prueba proporcionada y build; genera `reports/verification.json`. El reporte contiene resultados técnicos y documentos para revisión, no una calificación automática. `make verify` es equivalente. `bash public-tests/check.sh` es un check opcional de estructura.
+Ejecuta comprobación de archivos, prueba proporcionada, suite Jest y build; genera `reports/verification.json`. El reporte contiene resultados técnicos y documentos para revisión, no una calificación automática. `make verify` es equivalente.
 
 GitHub Actions ejecuta la misma verificación y permite descargar el artefacto `starter-week-01-evidence`. El reporte local se excluye de Git: adjúntenlo en Classroom o descarguen el del SHA entregado desde Actions.
 
@@ -50,9 +55,12 @@ Registren aquí sus supuestos y limitaciones de ejecución.
 - Se asume que todos los integrantes del equipo cuentan con Node.js 20.19 o superior y npm 10 o superior instalados en su computadora.
 - El proyecto fue probado únicamente en Windows; no se ha confirmado su funcionamiento en macOS o Linux.
 - Los datos mostrados (las tres inspecciones) son sintéticos y están precargados en el código; no provienen de una base de datos ni de un servidor externo todavía.
-- Como indica la actividad, esta semana no se implementa manifest, service worker, modo offline, sincronización, notificaciones ni autenticación; esas funciones se agregarán en semanas posteriores.
+- Durante la Semana 1 todavía no se implementaban manifest, service worker, modo offline, sincronización, notificaciones ni autenticación; las secciones siguientes registran los incrementos posteriores.
 
-El starter todavía no implementa instalación PWA, offline ni sincronización. No incluyan datos personales reales en el producto, archivos `.env` ni credenciales. La identificación de integrantes se conserva en el repositorio privado y Classroom.
+La observación anterior describe el starter de la Semana 1. No incluyan datos
+personales reales en el producto, archivos `.env` ni credenciales. La
+identificación académica de los integrantes se registra en
+`evidence/individual.md`.
 
 
 ---------------------------------------------------------------------------------------------------
@@ -91,13 +99,8 @@ También se agregó una navegación de demostración en la propia página ("Prob
 npm run verify
 ```
 
-o bien:
-
-```bash
-bash public-tests/check.sh
-```
-
-Ambos comandos revisan que existan los archivos obligatorios de esta semana (`public/manifest.webmanifest`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/components/app-shell.tsx`, `tests/manifest.spec.ts`) y que el proyecto compile correctamente.
+El comando anterior comprueba la estructura, ejecuta las pruebas y compila la aplicación.
+`npm run test:unit` permite correr Jest por separado e incluye la prueba del manifest (`tests/manifest.spec.ts`).
 
 ## Evidencia
 
@@ -144,13 +147,8 @@ Abran `http://localhost:3000`. Para probar el comportamiento offline manualmente
 npm run verify
 ```
 
-o bien:
-
-```bash
-bash public-tests/check.sh
-```
-
-Ambos comandos revisan que existan los archivos obligatorios de esta semana (`public/sw.js`, `src/lib/pwa/register-service-worker.ts`, `docs/cache-strategy.md`, `tests/service-worker.spec.ts`, `tests/offline.spec.ts`) y que el proyecto compile correctamente.
+El comando anterior comprueba la estructura, ejecuta las pruebas y compila la aplicación.
+Las pruebas del Service Worker y del modo offline también pueden ejecutarse con Jest:
 
 ```bash
 npm run test:unit
@@ -206,3 +204,81 @@ La prueba específica de esta semana se encuentra en:
 La comparación utiliza las tres inspecciones sintéticas existentes en el proyecto. No representa una medición de rendimiento en producción ni utiliza una base de datos real.
 
 La estrategia puede revisarse posteriormente si cambian los requisitos de actualización de datos, interactividad o fuente de información.
+
+---
+
+# Semana 5 — Persistencia local y sincronización idempotente
+
+## Preparación y ejecución
+
+Se requiere Node.js 20.19 o posterior y npm 10 o posterior. Desde la raíz del
+repositorio:
+
+```bash
+npm ci
+npm run dev
+```
+
+Abrir `http://localhost:3000`. En PowerShell, si la política de ejecución
+bloquea `npm.ps1`, usar `npm.cmd ci` y `npm.cmd run dev`. La instalación limpia
+usa las versiones fijadas en `package-lock.json`. La demostración y las pruebas
+utilizan únicamente datos sintéticos.
+
+En la ejecución de esta semana, `npm.cmd ci` terminó correctamente en Windows
+con Node.js v24.11.1 y npm 10.9.2. Mostró dos avisos de auditoría de
+dependencias (uno alto y uno crítico), sin bloquear la instalación. No se
+actualizaron versiones mayores durante este incremento.
+
+## Demostración visual
+
+En la página principal, el panel de Semana 5 permite:
+
+1. Crear una inspección sintética de prueba. Se guarda en IndexedDB con estado
+   `pending`, incluso si la pestaña ya abierta pierde la conexión.
+2. Consultar cuántas inspecciones locales siguen sin confirmación, incluidas
+   las que hayan agotado los intentos de envío.
+3. Iniciar la sincronización mediante un remitente simulado y observar el
+   resultado y la nueva cuenta de pendientes.
+
+El remitente simulado confirma el flujo sin enviar datos a un servidor. El
+listado SSR de `/inspecciones` sigue mostrando los tres registros sintéticos
+del arreglo original; no es una vista de la base local. La estructura de datos,
+los estados, los reintentos, la regla de idempotencia requerida del servidor y
+los límites se explican en [`docs/sync-policy.md`](docs/sync-policy.md).
+
+## Pruebas y verificación
+
+```bash
+npm run test:unit
+make verify
+```
+
+`npm run test:unit` ejecuta Jest, incluida `tests/sync.spec.ts` para la cola y
+la política de conflictos. `make verify` ejecuta `npm run verify`, que verifica
+los archivos obligatorios, la prueba del starter, toda la suite Jest y el build de producción; genera
+`reports/verification.json`. En Windows sin Make, el equivalente exacto es
+`npm.cmd run verify` (o `npm run verify` si PowerShell lo permite). El build
+también puede ejecutarse por separado con `npm run build`.
+
+El flujo de GitHub Actions de esta semana está en
+`.github/workflows/week-05-w05-sync-data.yml`. Tras subir el commit, abrir la
+pestaña **Actions** del repositorio y ejecutar ese flujo para el SHA de la
+entrega mediante `workflow_dispatch`, o comprobar la ejecución que dispara el
+`push`. Revisar que sus pasos de instalación, build, artefactos y prueba
+terminen correctamente. Los checks públicos dan feedback; la evaluación final
+se realiza sobre el SHA fijado.
+
+## Evidencia y límites
+
+Cada integrante anota su contribución, decisión técnica, prueba realmente
+ejecutada, resultado, limitación y uso de IA en
+[`evidence/individual.md`](evidence/individual.md), sección Semana 5. El SHA
+final se obtiene con `git rev-parse HEAD` después del último commit y se
+entrega junto con el enlace al flujo de Actions.
+
+No existe aún un backend de escritura: el demo no prueba persistencia remota,
+deduplicación en servidor ni conflictos entre dispositivos. El Service Worker
+actual no precachea los paquetes JavaScript de Next.js, por lo que una recarga
+completamente sin red puede perder la interacción del panel aunque el HTML de
+inicio esté en caché. IndexedDB también está sujeto a la cuota y limpieza de
+datos del navegador.
