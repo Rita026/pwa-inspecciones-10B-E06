@@ -494,4 +494,37 @@ para estructurar la documentación de la comparación CSR vs SSR, proponer la es
 las pruebas y revisar la redacción. Los cambios fueron revisados y adaptados al código real 
 del repositorio. La validación se realizó ejecutando npm run test:unit, obteniendo 6 suites y 18 pruebas aprobadas.
 
+
+---------------------------------------------------------------------------------------------------
+# Semana 5 — Evidencia individual
+
+## Integrante:
+
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+## Integrante:
+
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+## Integrante:
+
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
