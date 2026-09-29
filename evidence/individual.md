@@ -498,14 +498,42 @@ del repositorio. La validación se realizó ejecutando npm run test:unit, obteni
 ---------------------------------------------------------------------------------------------------
 # Semana 5 — Evidencia individual
 
-## Integrante:
+## Integrante: Rita González Sánchez
 
-- Commit SHA evaluado:
+- Commit SHA evaluado: 86fdac84bb9c070ccf0af12550dd2e30c34826e3
+
 - Decisión técnica que puedo explicar:
+Elegí IndexedDB (a través de la librería `idb`) para el almacenamiento local en vez de
+localStorage, porque necesitamos guardar múltiples registros estructurados, consultarlos
+por estado de sincronización (mediante un índice `by-sync-status`), y no bloquear la app
+mientras se leen o escriben datos, algo que localStorage no soporta bien al ser síncrono
+y limitado en tamaño. Para evitar duplicados al sincronizar, cada inspección se identifica
+por un `localId` generado en el dispositivo antes de cualquier intento de envío, de modo
+que un reintento no debería crear un registro nuevo si el servidor reconoce ese mismo id.
+Para resolver conflictos, implementé la estrategia "gana el más reciente" (Last-Write-Wins),
+comparando el campo `updatedAt` de la versión local contra la del servidor, por ser una
+estrategia simple, determinista y fácil de explicar.
+
 - Prueba que ejecuté y resultado:
+Ejecuté la batería de pruebas unitarias del proyecto mediante el comando npm run test:unit. Los resultados fueron satisfactorios: las 8 suites de pruebas pasaron correctamente (28 pruebas aprobadas y ninguna fallida). En particular, la suite sync-queue.test.ts validó el comportamiento de la cola de sincronización, incluyendo el manejo de estados, reintentos y sincronización de inspecciones.
+
+- Qué verifica esa prueba y qué no verifica:
+Verifica que la lógica implementada funcione de acuerdo con los casos definidos en las pruebas unitarias, incluyendo la cola de sincronización y otros componentes principales de la aplicación. Sin embargo, no verifica el comportamiento en un navegador con condiciones reales de uso, como pérdida de conexión, cierre inesperado de la pestaña o interacción con un servidor real.
+
 - Limitación o fallo diagnosticado:
+La política de conflicto "Last-Write-Wins" puede descartar un cambio legítimo si dos
+ediciones ocurren con el mismo timestamp o muy cerca en el tiempo; en ese caso, se conserva
+la versión local por decisión de diseño, lo cual no siempre sería lo correcto. Además, la
+base de datos local (IndexedDB) no tiene un límite de tamaño definido: si se acumulan muchas
+inspecciones sin sincronizar, podría llenarse sin que el usuario lo note.
+
 - Cambio que podría defender o modificar en vivo:
+Podría explicar y modificar en vivo el número máximo de reintentos (`MAX_RETRIES` en
+`queue.ts`), o cambiar la política de conflicto para que, en caso de timestamps iguales,
+gane la versión del servidor en vez de la local.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica de la cola de sincronización con reintentos y la política de resolución de conflictos, así como para comprender por qué IndexedDB es más adecuado que localStorage para este caso. Posteriormente validé la implementación ejecutando las pruebas unitarias del proyecto (npm run test:unit), verificando que todas las pruebas pasaran correctamente.
 
 
 ## Integrante:
