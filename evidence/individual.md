@@ -581,13 +581,40 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   comandos y revisó sus resultados.
 
 
-## Integrante:
+## Integrante: Katherine Daniela Gómez Merino
 
-- Commit SHA evaluado:
+- Commit SHA evaluado: Se actualizará después del commit final de esta evidencia.
+
 - Decisión técnica que puedo explicar:
+  La aplicación utiliza una cola local de inspecciones pendientes y una sincronización simulada. 
+  Esto permite comprobar el flujo de creación, almacenamiento local y procesamiento de 
+  inspecciones sin enviar datos reales a un servidor. 
+
 - Prueba que ejecuté y resultado:
+  Verifiqué manualmente el flujo desde el navegador. El contador inició en 0. 
+  Al seleccionar «Crear inspección de prueba», aumentó a 1 y apareció el mensaje 
+  «Inspección sintética guardada localmente y pendiente de sincronización». Después 
+  seleccioné «Simular sincronización» y la aplicación mostró «Sincronización simulada: 
+  1 confirmadas, 0 fallidas y 0 omitidas. No se enviaron datos a un servidor». Finalmente, 
+  el contador regresó a 0 y al seleccionar «Actualizar contador» permaneció en 0. 
+  También revisé visualmente la legibilidad de los textos, la claridad de los botones,
+  la organización de los mensajes y la adaptación de la interfaz al tamaño de la ventana, 
+  sin identificar problemas durante la revisión.
+
 - Limitación o fallo diagnosticado:
+  No identifiqué un fallo funcional o visual durante la prueba manual. La principal 
+  limitación es que la sincronización es simulada y no realiza un envío real a un servidor, 
+  por lo que esta prueba no demuestra persistencia o sincronización con un backend real.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo explicar y defender el flujo de creación de una inspección sintética, su incorporación 
+  a la cola local, el cambio del contador de pendientes y el proceso de sincronización simulada 
+  que confirma la inspección y actualiza el contador.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Utilicé ChatGPT como apoyo para organizar los pasos de la prueba manual y estructurar la documentación 
+  de la evidencia. La validación fue realizada personalmente en el navegador, ejecutando las acciones, 
+  observando los mensajes y valores mostrados por la aplicación y realizando la revisión visual antes 
+  de documentar los resultados.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
