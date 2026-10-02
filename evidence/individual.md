@@ -583,7 +583,7 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 
 ## Integrante: Katherine Daniela Gómez Merino
 
-- Commit SHA evaluado: Se actualizará después del commit final de esta evidencia.
+- Commit SHA evaluado: 859230d6e31a4e1aca858a499028f690454353ab
 
 - Decisión técnica que puedo explicar:
   La aplicación utiliza una cola local de inspecciones pendientes y una sincronización simulada. 
