@@ -620,6 +620,26 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 ----------------------------------------------------------------------------------------------------
 # Semana 5 — Evidencia individual
 
+## Integrante: Rita González Sánchez
+
+- Commit SHA evaluado: ea1e5f00f7061489d5bbf4d7ba44cf05577a9c67
+
+- Decisión técnica que puedo explicar: 
+  Implementé `camera.ts` y `geolocation.ts` con permisos mínimos (solo se solicitan bajo acción del usuario) y un resultado discriminado (`unsupported` / `denied` / `error` / `granted`). En geolocalización usé únicamente `getCurrentPosition` (sin `watchPosition`) y `enableHighAccuracy: false` por defecto para reducir impacto en batería y privacidad.
+
+- Prueba que ejecuté y resultado: 
+  `npx tsc --noEmit` (sin errores de tipos) y `make verify` → pass (9 test suites, 32 tests, build de Next.js exitoso).
+
+- Limitación o fallo diagnosticado: 
+  Las APIs de cámara y geolocalización solo funcionan en contexto seguro (HTTPS o localhost). Cuando la API no existe o el permiso es denegado, el módulo devuelve un estado de fallback para que la aplicación continúe sin romperse.
+
+- Cambio que podría defender o modificar en vivo: 
+  Podría cambiar `enableHighAccuracy` a `true` o agregar `facingMode: "environment"` en cámara si se requiere mayor precisión, manteniendo el mismo patrón de fallback.
+
+- Uso declarado de IA (herramienta, propósito, validación): 
+  Utilicé Grok (xAI) para revisar estructura del código, proponer patrón de resultado discriminado y esqueleto de geolocalización. Revisé el código y ejecuté `make verify` localmente antes de subir.
+
+
 ## Integrante:
 
 - Commit SHA evaluado:
@@ -629,14 +649,6 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 - Cambio que podría defender o modificar en vivo:
 - Uso declarado de IA (herramienta, propósito, validación):
 
-## Integrante:
-
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
-- Limitación o fallo diagnosticado:
-- Cambio que podría defender o modificar en vivo:
-- Uso declarado de IA (herramienta, propósito, validación):
 
 ## Integrante:
 
