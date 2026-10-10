@@ -645,13 +645,18 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
 - Commit SHA de mi implementación y pruebas:
   [`849cb5d30a7064bca1ff2794b011175bc2408b37`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/849cb5d30a7064bca1ff2794b011175bc2408b37).
   Esta evidencia se agrega en un commit posterior para poder citar un SHA real.
-  Para la entrega se debe fijar el último SHA de la rama, que incluye ambos commits.
+  Para la entrega se debe fijar el último SHA de la rama, que incluye la
+  implementación, la evidencia y la integración en los entregables compartidos.
 
 - Mi contribución concreta:
   [`src/lib/notifications/client.ts`](../src/lib/notifications/client.ts) y
   [`src/components/notifications-demo-panel.tsx`](../src/components/notifications-demo-panel.tsx),
   integrado en la portada con dos acciones: pedir permiso y mostrar una
-  notificación local de prueba. Agregué pruebas específicas de notificaciones;
+  notificación local de prueba. Agregué la sección de notificaciones en
+  [`docs/capabilities.md`](../docs/capabilities.md) y el README; moví mi suite
+  del cliente a `tests/capabilities.spec.ts`, la ruta obligatoria de la actividad,
+  sin duplicar sus pruebas. Añadí su ejecución al workflow de Semana 6 y los
+  artefactos requeridos al verificador local. Agregué pruebas de notificaciones;
   no modifiqué cámara, geolocalización, Service Worker ni evidencias de mis compañeras.
 
 - Decisión técnica que puedo explicar:
@@ -675,7 +680,7 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   Jest aprobadas, tipos válidos y build de producción correcto. El reporte
   generado fue `reports/verification.json`, con verificación técnica `pass`.
   De las pruebas, 34 corresponden a esta contribución y se reproducen con:
-  `npm.cmd run test:unit -- --runInBand tests/notifications.spec.ts tests/notifications-ssr.test.ts tests/notifications-demo-panel.test.tsx`.
+  `npm.cmd run test:unit -- --runInBand tests/capabilities.spec.ts tests/notifications-ssr.test.ts tests/notifications-demo-panel.test.tsx`.
   Verifican SSR sin APIs del navegador, permisos, ausencia de soporte, contexto
   inseguro, errores, registro inactivo, envío sintético, controles de la UI y
   prevención de solicitudes duplicadas. Las APIs de notificaciones se simulan.
@@ -692,12 +697,16 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   compatibles y un Service Worker activo. No hay avisos remotos ni programados.
   La instalación informó 23 vulnerabilidades de dependencias (19 moderadas,
   3 altas y 1 crítica); no se cambiaron las dependencias en este incremento.
-  Al revisar el repositorio faltaban `docs/capabilities.md` y
-  `tests/capabilities.spec.ts`, y el README llegaba hasta Semana 5. Se mantienen
-  fuera de mi parte para respetar el reparto. El check de artefactos de Actions
-  Semana 6 requiere esos archivos; el `verify` local todavía comprueba la
-  estructura hasta Semana 5, por lo que su PASS no demuestra que estén completos
-  todos los entregables de Semana 6.
+  La primera ejecución de [Actions Semana 6](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/runs/38060493187)
+  falló en el check de artefactos porque faltaban `docs/capabilities.md` y
+  `tests/capabilities.spec.ts`; el README también llegaba hasta Semana 5.
+  Completé lo correspondiente a mis notificaciones en esos entregables y
+  actualicé `verify` para detectar la ausencia de los archivos de Semana 6.
+  Tras trasladar la suite y completar esa documentación, Codex volvió a ejecutar
+  `npm.cmd run verify`: estructura, starter, 12 suites con 66 pruebas y build
+  de producción terminaron correctamente.
+  Esta cobertura sigue limitada a notificaciones: no demuestra pruebas de
+  cámara o geolocalización ni una evaluación académica completa de la semana.
 
 - Cambio que podría defender o modificar en vivo:
   Puedo explicar la diferencia entre solicitar permiso y mostrar un aviso,

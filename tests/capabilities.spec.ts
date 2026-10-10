@@ -1,3 +1,4 @@
+// Semana 6: contribución de Enrique, capacidad de notificaciones.
 import {
   getNotificationState,
   requestNotificationPermission,
