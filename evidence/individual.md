@@ -618,7 +618,7 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   de documentar los resultados.
 
 ----------------------------------------------------------------------------------------------------
-# Semana 5 — Evidencia individual
+# Semana 6 — Evidencia individual
 
 ## Integrante: Rita González Sánchez
 
@@ -640,14 +640,78 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   Utilicé Grok (xAI) para revisar estructura del código, proponer patrón de resultado discriminado y esqueleto de geolocalización. Revisé el código y ejecuté `make verify` localmente antes de subir.
 
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
 
-- Commit SHA evaluado:
+- Commit SHA de mi implementación y pruebas:
+  [`849cb5d30a7064bca1ff2794b011175bc2408b37`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/849cb5d30a7064bca1ff2794b011175bc2408b37).
+  Esta evidencia se agrega en un commit posterior para poder citar un SHA real.
+  Para la entrega se debe fijar el último SHA de la rama, que incluye ambos commits.
+
+- Mi contribución concreta:
+  [`src/lib/notifications/client.ts`](../src/lib/notifications/client.ts) y
+  [`src/components/notifications-demo-panel.tsx`](../src/components/notifications-demo-panel.tsx),
+  integrado en la portada con dos acciones: pedir permiso y mostrar una
+  notificación local de prueba. Agregué pruebas específicas de notificaciones;
+  no modifiqué cámara, geolocalización, Service Worker ni evidencias de mis compañeras.
+
 - Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
+  Consultar el permiso no abre diálogos. `requestNotificationPermission()` se
+  invoca directamente desde el clic, respeta permisos concedidos o denegados y
+  conserva `default` si se cierra el diálogo. `showTestNotification()` vuelve
+  a comprobar el permiso y reutiliza el Service Worker activo mediante
+  `getRegistration()` y `showNotification()`. No espera indefinidamente a
+  `serviceWorker.ready`: si no hay registro activo, permite reintentar. Elegí
+  esta API para usar el registro existente sin cambiarlo; el fallback es un
+  mensaje en pantalla. El título y cuerpo son sintéticos y la etiqueta fija
+  evita acumular pruebas del mismo tipo. La notificación es local, sin
+  suscripciones push ni backend. Referencias consultadas:
+  [solicitud de permiso](https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission_static)
+  y [showNotification](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification).
+
+- Prueba ejecutada y resultado real (10 de octubre de 2026):
+  Codex ejecutó `npm.cmd ci` con Node.js v24.11.1 y npm 10.9.2: instalación
+  correcta de 384 paquetes. Después ejecutó `npm.cmd run verify`, equivalente
+  exacto a `make verify` según el Makefile: starter PASS, 12 suites y 66 pruebas
+  Jest aprobadas, tipos válidos y build de producción correcto. El reporte
+  generado fue `reports/verification.json`, con verificación técnica `pass`.
+  De las pruebas, 34 corresponden a esta contribución y se reproducen con:
+  `npm.cmd run test:unit -- --runInBand tests/notifications.spec.ts tests/notifications-ssr.test.ts tests/notifications-demo-panel.test.tsx`.
+  Verifican SSR sin APIs del navegador, permisos, ausencia de soporte, contexto
+  inseguro, errores, registro inactivo, envío sintético, controles de la UI y
+  prevención de solicitudes duplicadas. Las APIs de notificaciones se simulan.
+  Además, con `npm.cmd run dev -- --hostname 127.0.0.1 --port 3010`, Codex revisó
+  la portada en un navegador aislado: permiso inicial `default`, Service Worker
+  activo y fallback de bloqueo cuando el navegador devolvió `denied` después
+  del clic y la recarga. A 390 px de ancho no hubo desbordamiento horizontal.
+
 - Limitación o fallo diagnosticado:
+  No se confirmó visualmente una notificación nativa con permiso concedido;
+  ese flujo está cubierto con mocks y falta validarlo personalmente. `sent`
+  significa que la API aceptó la solicitud, no garantiza que el sistema muestre
+  un aviso (por ejemplo, con No molestar). Se requiere HTTPS o localhost, APIs
+  compatibles y un Service Worker activo. No hay avisos remotos ni programados.
+  La instalación informó 23 vulnerabilidades de dependencias (19 moderadas,
+  3 altas y 1 crítica); no se cambiaron las dependencias en este incremento.
+  Al revisar el repositorio faltaban `docs/capabilities.md` y
+  `tests/capabilities.spec.ts`, y el README llegaba hasta Semana 5. Se mantienen
+  fuera de mi parte para respetar el reparto. El check de artefactos de Actions
+  Semana 6 requiere esos archivos; el `verify` local todavía comprueba la
+  estructura hasta Semana 5, por lo que su PASS no demuestra que estén completos
+  todos los entregables de Semana 6.
+
 - Cambio que podría defender o modificar en vivo:
+  Puedo explicar la diferencia entre solicitar permiso y mostrar un aviso,
+  cambiar el mensaje sintético o su etiqueta y actualizar las pruebas.
+  Para validar manualmente: abrir la portada, pulsar «Pedir permiso de
+  notificaciones», aceptar y pulsar «Mostrar notificación de prueba»; repetir
+  bloqueando el permiso desde la configuración del sitio y comprobar el fallback.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Codex (OpenAI) para analizar el proyecto, implementar el cliente y el
+  panel, escribir las pruebas y redactar esta evidencia. Codex ejecutó los
+  comandos y la revisión del navegador indicados arriba. La validación humana
+  está pendiente: antes de entregar debo revisar y comprender el código,
+  reproducir la prueba en mi navegador y confirmar la notificación nativa.
 
 
 ## Integrante:
