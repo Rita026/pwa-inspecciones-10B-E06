@@ -723,13 +723,35 @@ Usé Claude (Anthropic) para diseñar la estructura de datos local, la lógica d
   reproducir la prueba en mi navegador y confirmar la notificación nativa.
 
 
-## Integrante:
+## Integrante: Katherine Daniela Gómez Merino
 
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
+- Commit SHA evaluado: 8eb769aea80e1556927d8b692dd7fbad29538e8f
+
+- Decisión técnica que puedo explicar: 
+Se creó un panel independiente para probar los permisos de cámara y ubicación. 
+Se reutilizaron las funciones existentes requestCameraAccess() 
+y requestCurrentPosition(). Se muestran mensajes para los resultados de permiso concedido, 
+denegado, función no disponible y error. La cámara se detiene después de comprobar el 
+acceso para no mantenerla activa innecesariamente.
+
+- Prueba que ejecuté y resultado: 
+Ejecuté npm.cmd run test:unit -- --runInBand: las 12 suites y las 66 pruebas pasaron. 
+Ejecuté npm.cmd run build: la compilación finalizó correctamente. También probé manualmente 
+en el navegador los permisos de cámara y ubicación, aceptándolos y denegándolos; los mensajes 
+se mostraron correctamente.
+
 - Limitación o fallo diagnosticado:
+El acceso a la cámara y la ubicación depende de los permisos del usuario, del navegador
+y de la disponibilidad del dispositivo. Si se deniegan los permisos o la función no está
+disponible, la aplicación informa de la situación y permite continuar utilizándola.
+
 - Cambio que podría defender o modificar en vivo:
+Puedo explicar el funcionamiento de los dos botones, el uso de las funciones existentes, 
+el manejo de los distintos resultados y la actualización de los mensajes sin bloquear la aplicación.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+Utilicé ChatGPT como apoyo para organizar la implementación, revisar los pasos de Git y preparar la
+documentación. Validé el resultado ejecutando las pruebas unitarias, la compilación de producción
+y las pruebas manuales en el navegador.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
