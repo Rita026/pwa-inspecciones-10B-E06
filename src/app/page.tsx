@@ -1,6 +1,7 @@
 import { getInspections, type InspectionScenario } from "../lib/data/inspections";
 import SyncDemoPanel from "../components/sync-demo-panel";
 import NotificationsDemoPanel from "../components/notifications-demo-panel";
+import DeviceCapabilitiesPanel from "../components/device-capabilities-panel";
 
 type HomePageProps = {
   searchParams?: { estado?: string };
@@ -30,6 +31,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <SyncDemoPanel />
       <NotificationsDemoPanel />
+      <DeviceCapabilitiesPanel />
 
       <section aria-labelledby="inspections-heading" className="content-section">
         <div className="section-heading">
