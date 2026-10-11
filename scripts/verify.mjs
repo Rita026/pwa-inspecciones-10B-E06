@@ -4,6 +4,16 @@ import { spawnSync } from "node:child_process";
 
 const root = resolve(import.meta.dirname, "..");
 const required = ["package.json", "package-lock.json", "README.md", "src/app/layout.tsx", "src/app/page.tsx", "src/app/globals.css", "src/lib/data/inspections.ts", "docs/requirements.md", "docs/decision-record.md", "tests/starter.spec.mjs", "evidence/individual.md", "src/lib/sync/queue.ts", "src/lib/storage/schema.ts", "src/lib/sync/conflict-policy.ts", "docs/sync-policy.md", "tests/sync.spec.ts"];
+required.push(
+  "src/lib/device/camera.ts",
+  "src/lib/device/geolocation.ts",
+  "src/lib/notifications/client.ts",
+  "src/components/notifications-demo-panel.tsx",
+  "docs/capabilities.md",
+  "tests/capabilities.spec.ts",
+  "tests/notifications-ssr.test.ts",
+  "tests/notifications-demo-panel.test.tsx"
+);
 const missing = required.filter(file => !existsSync(resolve(root, file)));
 const structureOnly = process.argv.includes("--structure");
 if (structureOnly) {
@@ -23,7 +33,7 @@ const git = args => {
   const r = spawnSync("git", args, { cwd: root, encoding: "utf8" });
   return r.status === 0 ? r.stdout.trim() : null;
 };
-const documents = ["docs/requirements.md", "docs/decision-record.md", "evidence/individual.md", "README.md"].map(file => ({ file, content: existsSync(resolve(root, file)) ? readFileSync(resolve(root, file), "utf8") : null }));
+const documents = ["docs/requirements.md", "docs/decision-record.md", "docs/capabilities.md", "evidence/individual.md", "README.md"].map(file => ({ file, content: existsSync(resolve(root, file)) ? readFileSync(resolve(root, file), "utf8") : null }));
 const gitStatus = git(["status", "--porcelain"]);
 const result = {
   schemaVersion: 2,

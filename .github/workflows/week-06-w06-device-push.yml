@@ -37,6 +37,11 @@ jobs:
         run: |
           set -euo pipefail
           test -d tests && find tests -type f -print -quit | grep -q . && npm run test --if-present -- --run
+      - name: Pruebas de permisos, fallbacks y UI de notificaciones
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:unit -- --runInBand tests/capabilities.spec.ts tests/notifications-ssr.test.ts tests/notifications-demo-panel.test.tsx
       - name: Upload evaluation artifacts
         if: always()
         uses: actions/upload-artifact@v4

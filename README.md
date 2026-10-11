@@ -3,7 +3,7 @@
 Este es un proyecto acumulativo de la PWA de inspecciones de laboratorio.
 `START_HERE.md` y `ACTIVIDAD-01.md` conservan las instrucciones de arranque de
 la Semana 1. Las secciones de cada semana registran lo implementado después;
-la entrega vigente es la Semana 5, descrita al final de este archivo.
+la entrega vigente es la Semana 6, descrita al final de este archivo.
 
 ## Entorno
 
@@ -282,3 +282,73 @@ actual no precachea los paquetes JavaScript de Next.js, por lo que una recarga
 completamente sin red puede perder la interacción del panel aunque el HTML de
 inicio esté en caché. IndexedDB también está sujeto a la cuota y limpieza de
 datos del navegador.
+
+---
+
+# Semana 6 — Notificaciones y UI de prueba (Enrique)
+
+## Preparación y ejecución
+
+Se mantienen los requisitos de Node.js y npm indicados arriba:
+
+```bash
+npm ci
+npm run dev
+```
+
+En PowerShell, si se bloquea `npm.ps1`, usar `npm.cmd ci` y `npm.cmd run dev`.
+Abrir `http://localhost:3000`. Para notificaciones se necesita HTTPS o localhost,
+un navegador compatible y el Service Worker de la aplicación activo.
+
+## Probar las notificaciones
+
+En la portada, el panel **Notificaciones de prueba** permite:
+
+1. Pulsar **Pedir permiso de notificaciones** y responder al diálogo. No se
+   solicita autorización al cargar la página.
+2. Si se concede el permiso, pulsar **Mostrar notificación de prueba**. Se envía
+   un mensaje local sintético mediante el Service Worker existente.
+3. Si se bloquea el permiso, consultar el aviso del panel y cambiarlo desde la
+   configuración del sitio para volver a probar. Al recuperar el foco se
+   actualiza el estado; también se puede recargar la página.
+
+La aplicación presenta mensajes de fallback si falta soporte, el contexto no
+es seguro, el Service Worker aún no está activo o falla una solicitud.
+El permiso es opcional: las inspecciones pueden seguir usándose sin él.
+
+El cliente está en [`src/lib/notifications/client.ts`](src/lib/notifications/client.ts)
+y la UI en [`src/components/notifications-demo-panel.tsx`](src/components/notifications-demo-panel.tsx).
+Las decisiones, estados, supuestos, límites y pasos de prueba están en la sección
+de notificaciones de [`docs/capabilities.md`](docs/capabilities.md).
+
+## Pruebas, verificación y evidencia
+
+```bash
+npm run test:unit -- --runInBand tests/capabilities.spec.ts tests/notifications-ssr.test.ts tests/notifications-demo-panel.test.tsx
+make verify
+```
+
+En Windows sin Make, el equivalente exacto es `npm.cmd run verify`.
+La primera orden ejecuta las 34 pruebas de notificaciones. `make verify`
+comprueba los archivos obligatorios hasta Semana 6, ejecuta el starter y toda
+la suite Jest y compila producción; genera `reports/verification.json`, que
+también incluye el documento de capacidades para revisión.
+
+`tests/capabilities.spec.ts` contiene la contribución de pruebas del cliente de
+notificaciones; las suites separadas cubren SSR y UI. Estas pruebas simulan
+las APIs y no comprueban cámara, geolocalización ni la presentación nativa del
+aviso por el sistema operativo.
+
+El workflow [Semana 6](.github/workflows/week-06-w06-device-push.yml) ejecuta
+instalación limpia, build, revisión de artefactos, starter y las pruebas de
+notificaciones en cada `push`, `pull_request` o ejecución manual. El workflow
+general de Semana 1 también ejecuta `npm run verify` con todas las suites.
+Consultar [GitHub Actions](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions)
+para el SHA final de la entrega. La evidencia de Enrique está en
+[`evidence/individual.md`](evidence/individual.md), apartado Semana 6, e incluye
+su decisión técnica, resultados reales, limitaciones y uso de IA.
+
+Esta prueba no implementa avisos remotos ni programados. La aceptación de la
+solicitud no garantiza un aviso visible si el sistema tiene las notificaciones
+bloqueadas o está en modo No molestar. Sigue pendiente la comprobación humana
+del aviso nativo con permiso concedido.
