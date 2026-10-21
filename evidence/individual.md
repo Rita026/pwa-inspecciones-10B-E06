@@ -754,4 +754,43 @@ Utilicé ChatGPT como apoyo para organizar la implementación, revisar los pasos
 documentación. Validé el resultado ejecutando las pruebas unitarias, la compilación de producción
 y las pruebas manuales en el navegador.
 
+
+-----------------------------------------------------------------------------------------------------
+# Semana 8 — Evidencia individual
+
+## Integrante:
+
+- Grupo y equipo: 
+- Mi contribución de esta semana y enlace:
+- Decisión técnica y motivo:
+- Prueba/comando que ejecuté:
+- Resultado observado y enlace al reporte:
+- Qué demuestra y qué no demuestra:
+- Limitación o riesgo:
+- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+
+
+## Integrante:
+
+- Grupo y equipo: 
+- Mi contribución de esta semana y enlace:
+- Decisión técnica y motivo:
+- Prueba/comando que ejecuté:
+- Resultado observado y enlace al reporte:
+- Qué demuestra y qué no demuestra:
+- Limitación o riesgo:
+- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+
+
+## Integrante:
+
+- Grupo y equipo: 
+- Mi contribución de esta semana y enlace:
+- Decisión técnica y motivo:
+- Prueba/comando que ejecuté:
+- Resultado observado y enlace al reporte:
+- Qué demuestra y qué no demuestra:
+- Limitación o riesgo:
+- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
