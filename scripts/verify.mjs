@@ -22,7 +22,7 @@ if (structureOnly) {
 }
 const checks = [{ id: "structure", status: missing.length ? "fail" : "pass", missing }];
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-for (const [id, args] of [["test", ["test"]], ["unit", ["run", "test:unit", "--", "--runInBand"]], ["build", ["run", "build"]]]) {
+for (const [id, args] of [["test", ["test"]], ["unit", ["run", "test:unit", "--", "--runInBand"]], ["lint", ["run", "lint"]], ["typecheck", ["run", "typecheck"]], ["build", ["run", "build"]]]) {
   console.log(`\nVerificando ${id}...`);
   const run = spawnSync(npm, args, { cwd: root, encoding: "utf8", shell: process.platform === "win32", maxBuffer: 20 * 1024 * 1024 });
   if (run.stdout) process.stdout.write(run.stdout);

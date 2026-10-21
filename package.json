@@ -8,7 +8,10 @@
     "start": "next start",
     "test": "node tests/starter.spec.mjs",
     "verify": "node scripts/verify.mjs",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "idb": "^8.0.3",
@@ -23,6 +26,8 @@
     "@types/node": "^20.14.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
     "fake-indexeddb": "^6.2.5",
     "jest": "^30.5.1",
     "jest-environment-jsdom": "^30.5.1",
