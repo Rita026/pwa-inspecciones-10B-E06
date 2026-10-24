@@ -758,16 +758,34 @@ y las pruebas manuales en el navegador.
 -----------------------------------------------------------------------------------------------------
 # Semana 8 — Evidencia individual
 
-## Integrante:
+## Integrante: Rita González Sánchez
 
-- Grupo y equipo: 
+- Grupo y equipo: 10°"B" E06
+
 - Mi contribución de esta semana y enlace:
+  Implementé las pruebas de integración de la cola de sincronización (`tests/integration/sync-flow.test.ts` y `tests/integration/sync-idempotency.test.ts`): persistencia de una inspección pendiente tras simular recarga de página, y verificación de que reintentar la sincronización de la misma operación no reenvía ni deja pendientes duplicados. Agregué la prueba unitaria de la cola (`tests/unit/queue.spec.ts`) sobre el paso a `synced` y el agotamiento de reintentos (`MAX_RETRIES` / `skipped`). Demostré el defecto controlado en rama temporal (marcar `pending` en lugar de `synced` tras un envío OK), registré el fallo del test de idempotencia y restauré el código hasta volver a verde.
+  Commit: [`cb862935d5a2fdceda33cbe334a4463baa344994`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/cb862935d5a2fdceda33cbe334a4463baa344994)
+
 - Decisión técnica y motivo:
+  Usar `fake-indexeddb` y `jest.resetModules()` en integración para simular pérdida de estado en memoria sin perder IndexedDB, acercando el caso a “guardar offline y recargar”. En unitarias, asertar estados y contadores de la cola (`synced`, pendientes, `skipped`) en lugar de solo comprobar que las funciones existen. El defecto controlado se limitó a cambiar `syncStatus: "synced"` por `"pending"` tras un `result.ok`, porque es el punto que hace que el registro salga de la cola pendiente; así el test de idempotencia falla de forma clara y reproducible.
+
 - Prueba/comando que ejecuté:
+  `npx jest tests/unit tests/integration`
+  y, para el defecto controlado:
+  `npx jest tests/integration/sync-idempotency.test.ts`
+  (con el código roto y después de restaurar).
+
 - Resultado observado y enlace al reporte:
+  Con el código correcto: 3 suites y 4 tests en verde (unit + dos de integración). Con el defecto introducido: el test de idempotencia falló con `Expected: 0, Received: 1` en la segunda sincronización (`r2.synced`). Tras restaurar `syncStatus: "synced"`, el mismo test volvió a pasar. Commit de las pruebas: https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/cb862935d5a2fdceda33cbe334a4463baa344994 — el reporte global de CI se enlazará al SHA final común cuando se integre con el resto del equipo.
+
 - Qué demuestra y qué no demuestra:
+  Demuestra que una inspección encolada persiste en IndexedDB tras reiniciar módulos, que una sincronización exitosa saca el registro de pendientes y que un segundo `syncPendingInspections` no vuelve a llamar al sender ni reporta otro `synced`. También demuestra que la suite detecta la regresión de no marcar como sincronizado. No demuestra sincronización contra un servidor real, deduplicación en el backend ni el flujo E2E completo desde la UI (formulario, offline de red y permisos denegados), que corresponden a otras capas/integrantes.
+
 - Limitación o riesgo:
-- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+  Las pruebas usan un sender simulado (fixture) y `fake-indexeddb`; no validan red real, Service Worker ni permisos del dispositivo. Si IndexedDB no se aísla entre suites en el mismo proceso, podría haber interferencia entre tests; en esta ejecución no se observó. El defecto controlado no se entregó integrado: solo se usó en rama temporal y se restauró antes de continuar.
+
+- IA: herramienta, propósito, partes influidas y validación propia:
+  Utilicé asistencia de IA (Grok) para estructurar los casos de integración/unitarias, el procedimiento del defecto controlado y el borrador de esta evidencia. Las pruebas las ejecuté localmente con Jest y validé en verde (y en rojo a propósito en el defecto) antes de considerar el incremento listo. Revisé rutas de import, aserciones y que el cambio del defecto fuera reversible y no se subiera a la rama de entrega.
 
 
 ## Integrante:
