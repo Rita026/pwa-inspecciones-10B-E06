@@ -352,3 +352,19 @@ Esta prueba no implementa avisos remotos ni programados. La aceptación de la
 solicitud no garantiza un aviso visible si el sistema tiene las notificaciones
 bloqueadas o está en modo No molestar. Sigue pendiente la comprobación humana
 del aviso nativo con permiso concedido.
+
+---
+
+# Semana 8 — Pruebas de la cola (integración y unitarias)
+
+## Qué se agregó en esta parte
+
+- `tests/integration/sync-flow.test.ts`: una inspección guardada sin conexión sigue pendiente tras simular recarga (`jest.resetModules` + IndexedDB).
+- `tests/integration/sync-idempotency.test.ts`: sincronizar dos veces la misma operación no reenvía ni deja pendientes.
+- `tests/unit/queue.spec.ts`: reglas de la cola (paso a `synced` y agotamiento de reintentos / `skipped`).
+
+## Cómo ejecutarlas
+
+```bash
+npm ci
+npx jest tests/unit tests/integration
