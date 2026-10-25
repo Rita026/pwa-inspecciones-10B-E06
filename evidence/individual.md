@@ -788,16 +788,26 @@ y las pruebas manuales en el navegador.
   Utilicé asistencia de IA (Grok) para estructurar los casos de integración/unitarias, el procedimiento del defecto controlado y el borrador de esta evidencia. Las pruebas las ejecuté localmente con Jest y validé en verde (y en rojo a propósito en el defecto) antes de considerar el incremento listo. Revisé rutas de import, aserciones y que el cambio del defecto fuera reversible y no se subiera a la rama de entrega.
 
 
-## Integrante:
+## Integrante: Katherine Daniela Gómez Merino
 
-- Grupo y equipo: 
-- Mi contribución de esta semana y enlace:
-- Decisión técnica y motivo:
-- Prueba/comando que ejecuté:
-- Resultado observado y enlace al reporte:
-- Qué demuestra y qué no demuestra:
-- Limitación o riesgo:
-- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+- Grupo y equipo: 10°"B" E06
+
+- Mi contribución de esta semana y enlace: Implementé un formulario para registrar inspecciones con datos ingresados por el usuario. Agregué validaciones para evitar guardar datos inválidos, el almacenamiento local mediante IndexedDB, la opción de obtener la ubicación del dispositivo y una prueba unitaria para la validación. También elaboré el documento docs/test-strategy.md.
+Enlace a mi contribución: https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/f217010ba7d44d7784005cb42138d4b289460b8b
+ Commit: [`f217010ba7d44d7784005cb42138d4b289460b8b`]
+
+- Decisión técnica y motivo: Separé la validación en la función validateInspectionForm para comprobar los datos antes de guardarlos. Utilicé queueInspection para almacenar las inspecciones localmente y dejé la geolocalización como una opción independiente, de modo que el usuario pueda guardar una inspección sin proporcionar su ubicación.
+
+- Prueba/comando que ejecuté: npm.cmd run test:unit -- --runInBand, npm.cmd run typecheck y npm.cmd run build. También probé manualmente el formulario desde el navegador.
+
+- Resultado observado y enlace al reporte: Las pruebas unitarias finalizaron correctamente: 16 suites aprobadas y 78 pruebas exitosas. La comprobación de TypeScript terminó sin errores y la compilación de producción fue exitosa.Los resultados se registraron en docs/test-strategy.md.
+Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/feature/formulario-inspecciones/docs/test-strategy.md
+
+- Qué demuestra y qué no demuestra: Los resultados demuestran que las pruebas unitarias existentes pasan, que la validación contempla datos válidos e inválidos y que el proyecto compila correctamente. La prueba manual confirmó que se puede guardar una inspección localmente sin solicitar la ubicación. Esto no demuestra que las inspecciones se hayan enviado a un servidor real ni que la sincronización remota funcione correctamente.
+
+- Limitación o riesgo: Las inspecciones quedan almacenadas localmente y pendientes de sincronización. La geolocalización depende de los permisos del usuario, del navegador y del dispositivo. 
+
+- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»: Utilicé ChatGPT como apoyo para desarrollar y revisar el formulario, la validación, la integración de la ubicación opcional, la prueba unitaria y la estrategia de pruebas. Validé los cambios ejecutando las pruebas unitarias, la comprobación de TypeScript y la compilación, además de probar manualmente el guardado local de una inspección.
 
 
 ## Integrante:
