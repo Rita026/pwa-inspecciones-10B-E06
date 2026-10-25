@@ -171,3 +171,142 @@ dd { font-size: .82rem; font-weight: 700; margin: 0; text-align: right; }
     padding: 16px;
   }
 }
+
+/* Formulario de registro de inspecciones */
+.inspection-form-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin-top: 26px;
+  padding: 26px;
+}
+
+.inspection-form-panel > .eyebrow {
+  color: var(--accent);
+}
+
+.inspection-form-panel h2 {
+  margin-bottom: 12px;
+}
+
+.form-description {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+  padding: 11px 12px;
+  width: 100%;
+}
+
+.form-field input:focus-visible,
+.form-field select:focus-visible,
+.form-field textarea:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.form-field [aria-invalid="true"] {
+  border-color: #a32828;
+}
+
+.field-error {
+  color: #a32828;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.location-controls {
+  margin-top: 20px;
+}
+
+.location-message {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+.form-submit-button,
+.form-secondary-button {
+  border: 1px solid var(--accent);
+  border-radius: 9px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 11px 15px;
+}
+
+.form-submit-button {
+  background: var(--accent);
+  color: white;
+  margin-top: 20px;
+}
+
+.form-secondary-button {
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.form-submit-button:disabled,
+.form-secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.form-submit-button:focus-visible,
+.form-secondary-button:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 3px;
+}
+
+.form-feedback {
+  color: var(--success);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 16px 0 0;
+}
+
+@media (max-width: 760px) {
+  .inspection-form-panel {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-field-wide {
+    grid-column: auto;
+  }
+}
