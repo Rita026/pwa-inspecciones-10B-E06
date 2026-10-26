@@ -368,3 +368,28 @@ del aviso nativo con permiso concedido.
 ```bash
 npm ci
 npx jest tests/unit tests/integration
+```
+
+---
+
+# Semana 8 — Pruebas E2E con Playwright y workflow de evaluación
+
+## Qué se agregó en esta parte
+
+- `tests/e2e/inspection-flow.spec.ts`: pruebas en Chromium real contra el build de producción.
+  - **Flujo completo:** se llena el formulario sin conexión (`context.setOffline`), se guarda en IndexedDB, se recarga la app y la captura sigue pendiente con el mismo `localId`; después «Simular sincronización» la confirma (`synced`, `serverId = demo-<localId>`) y ya no queda nada por reenviar.
+  - **Validación:** datos inválidos muestran los errores de cada campo y no se guarda nada.
+  - **Permiso concedido:** las coordenadas del navegador se guardan con la inspección.
+  - **Variante con permiso negado:** el navegador rechaza la geolocalización, el formulario muestra «Permiso denegado…» y la inspección se guarda y sincroniza sin coordenadas.
+- `playwright.config.ts`: levanta `next start` en `127.0.0.1:3100` y guarda trazas y capturas sólo cuando una prueba falla.
+- `.github/workflows/academic-evaluation.yml`: en cada push/PR ejecuta instalación limpia, artefactos de la semana, lint, typecheck, starter + Jest, build y E2E, y sube `playwright-report/` y `test-results/` como artefacto.
+
+## Cómo ejecutarlas
+
+```bash
+npm ci
+npx playwright install chromium
+npm run test:e2e:build   # build de producción + E2E
+# o, si ya existe el build:
+npm run test:e2e
+```
