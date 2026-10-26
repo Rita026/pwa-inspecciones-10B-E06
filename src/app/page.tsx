@@ -2,6 +2,7 @@ import { getInspections, type InspectionScenario } from "../lib/data/inspections
 import SyncDemoPanel from "../components/sync-demo-panel";
 import NotificationsDemoPanel from "../components/notifications-demo-panel";
 import DeviceCapabilitiesPanel from "../components/device-capabilities-panel";
+import InspectionForm from "../components/inspection-form";
 
 type HomePageProps = {
   searchParams?: { estado?: string };
@@ -30,6 +31,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </header>
 
       <SyncDemoPanel />
+      <InspectionForm />
       <NotificationsDemoPanel />
       <DeviceCapabilitiesPanel />
 
