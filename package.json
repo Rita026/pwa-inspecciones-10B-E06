@@ -11,7 +11,9 @@
     "test:unit": "jest",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:build": "npm run build && playwright test"
   },
   "dependencies": {
     "idb": "^8.0.3",
@@ -20,6 +22,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/jest": "^30.0.0",

@@ -53,3 +53,18 @@ La inspecciÃ³n debe poder guardarse con los demÃ¡s datos vÃ¡lidos aunque n
 - La ubicaciÃ³n depende de los permisos del usuario, del navegador y del dispositivo.
 - El guardado local no demuestra que una inspecciÃ³n se haya sincronizado con un servidor real.
 - Los resultados corresponden a la ejecuciÃ³n realizada durante el desarrollo y pueden cambiar si se modifica el cÃ³digo o la configuraciÃ³n.
+
+## Pruebas E2E con Playwright (semana 8)
+
+Archivo: `tests/e2e/inspection-flow.spec.ts`. Se ejecutan en Chromium contra el build de producción (`npm run test:e2e:build`) y en el workflow `.github/workflows/academic-evaluation.yml`.
+
+| Caso | Qué hace la prueba | Qué comprueba |
+|---|---|---|
+| Datos inválidos | Envía el formulario vacío con hallazgos `-1`. | Se muestran los errores de cada campo, `aria-invalid` y no se guarda ningún registro en IndexedDB. |
+| Flujo completo sin conexión | Corta la red, llena y guarda; recarga con red; pulsa «Simular sincronización». | El registro queda `pending` con todos sus campos, conserva el mismo `localId` tras recargar y pasa a `synced` una sola vez; el botón de sincronizar queda deshabilitado. |
+| Permiso concedido | Concede geolocalización con coordenadas ficticias. | El formulario muestra las coordenadas y se guardan en el registro. |
+| Permiso negado | No concede el permiso; Chromium responde `PERMISSION_DENIED`. | Se muestra «Permiso denegado…», no aparecen coordenadas, el botón sigue disponible y la inspección se guarda y sincroniza sin `coordinates`. |
+
+**Resultado observado:** 4 pruebas aprobadas; 12 de 12 al repetir cada una 3 veces. Al hacer temporalmente que el formulario exigiera coordenadas, fallaron el flujo completo y la variante con permiso negado; al restaurar el código volvieron a pasar.
+
+**Límites:** la sincronización usa el receptor simulado de la app, no un servidor real. Sólo se prueba Chromium; la denegación del permiso es la del navegador automatizado, no la de un dispositivo físico. El contador de pendientes no se actualiza solo al guardar desde el formulario: la prueba pulsa «Actualizar contador».

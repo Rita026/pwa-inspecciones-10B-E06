@@ -1,0 +1,103 @@
+# Retroalimentación formativa de la Semana 8: no sustituye la revisión del docente.
+# Reproduce desde cero instalación, calidad, pruebas unitarias/integración, build y E2E.
+name: Academic Evaluation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: academic-evaluation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    name: Evaluación académica (semana 8)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalación limpia
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+
+      - name: AC-01 - Los artefactos de la semana existen
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in \
+            src/components/inspection-form.tsx \
+            src/lib/inspections/validation.ts \
+            src/lib/sync/queue.ts \
+            src/lib/device/geolocation.ts \
+            docs/test-strategy.md \
+            docs/sync-policy.md \
+            tests/inspection-validation.test.ts \
+            tests/integration/sync-flow.test.ts \
+            tests/integration/sync-idempotency.test.ts \
+            tests/unit/queue.spec.ts \
+            tests/e2e/inspection-flow.spec.ts \
+            playwright.config.ts \
+            evidence/individual.md; do
+            test -s "$file" || { echo "Falta o está vacío: $file"; exit 1; }
+          done
+
+      - name: AC-02 - Lint y tipos
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run lint
+          npm run typecheck
+
+      - name: AC-03 - Pruebas del starter, unitarias e integración
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm test
+          npm run test:unit -- --runInBand
+
+      - name: AC-04 - Build de producción
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build
+
+      - name: Navegador para E2E
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx playwright install --with-deps chromium
+
+      - name: AC-05 - E2E con Playwright (flujo completo y permiso negado)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx playwright test
+
+      - name: Subir reportes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: academic-evidence-w08-e2e
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            playwright-report/
+            test-results/
