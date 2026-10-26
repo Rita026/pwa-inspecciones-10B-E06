@@ -3,7 +3,8 @@
 Este es un proyecto acumulativo de la PWA de inspecciones de laboratorio.
 `START_HERE.md` y `ACTIVIDAD-01.md` conservan las instrucciones de arranque de
 la Semana 1. Las secciones de cada semana registran lo implementado después;
-la entrega vigente es la Semana 6, descrita al final de este archivo.
+la entrega vigente es la Semana 8; su resumen de setup, ejecución, verificación
+y evidencia está en «Semana 8 — Entrega» al final de este archivo.
 
 ## Entorno
 
@@ -393,3 +394,85 @@ npm run test:e2e:build   # build de producción + E2E
 # o, si ya existe el build:
 npm run test:e2e
 ```
+
+---
+
+# Semana 8 — Entrega: setup, ejecución, verificación y evidencia
+
+Pirámide de pruebas del flujo crítico (capturar sin conexión, conservar tras
+recargar y sincronizar una sola vez) automatizada en GitHub Actions. Sólo se
+usan datos sintéticos. El detalle de cada nivel, las decisiones, los supuestos,
+los límites y los fallos encontrados está en
+[`docs/test-strategy.md`](docs/test-strategy.md).
+
+## Entregables
+
+| Entregable | Ruta |
+|---|---|
+| Pruebas unitarias | [`tests/unit/`](tests/unit/) y suites de componentes y validación en `tests/` |
+| Pruebas de integración | [`tests/integration/`](tests/integration/) |
+| Pruebas E2E | [`tests/e2e/`](tests/e2e/) y [`playwright.config.ts`](playwright.config.ts) |
+| Estrategia de pruebas | [`docs/test-strategy.md`](docs/test-strategy.md) |
+| Workflow de CI | [`.github/workflows/academic-evaluation.yml`](.github/workflows/academic-evaluation.yml) |
+| Evidencia individual | [`evidence/individual.md`](evidence/individual.md), apartado «Semana 8» |
+
+## Setup
+
+Requisitos: Node.js 20 o posterior (el CI usa Node 20; en local se probó con
+Node v22.22.0 y v24.21.0), npm, Git y, para E2E, Chromium de Playwright.
+
+```bash
+npm ci
+npx playwright install chromium   # sólo una vez, para las E2E
+```
+
+## Ejecución
+
+```bash
+npm run dev        # desarrollo en http://localhost:3000
+npm run build && npm run start   # producción
+```
+
+## Verificación
+
+```bash
+make verify                        # equivale a: npm run verify
+npm run lint
+npm run typecheck
+npm test                           # prueba del starter
+npm run test:unit -- --runInBand   # unitarias + integración (Jest)
+npm run test:e2e:build             # build de producción + E2E (Playwright)
+```
+
+En Windows sin Make, el equivalente exacto de `make verify` es
+`npm.cmd run verify`. `make verify` comprueba la estructura, ejecuta el starter,
+toda la suite Jest, lint, typecheck y build, y genera
+`reports/verification.json`. Las E2E se ejecutan aparte con
+`npm run test:e2e:build` y en el workflow.
+
+Resultados observados en `main` (commit `38810e9`):
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run lint` | Sin advertencias ni errores |
+| `npm run typecheck` | Sin errores |
+| `npm test` | `starter.spec.mjs: PASS` |
+| `npm run test:unit -- --runInBand` | 16 suites y 78 pruebas aprobadas |
+| `npm run build` | Compilación de producción correcta |
+| `npx playwright test` | 4 de 4 aprobadas |
+| GitHub Actions | [Academic Evaluation en verde](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/runs/40263154007) y workflows de semanas 1 a 6 en verde |
+
+## Evidencia
+
+Cada integrante registra en [`evidence/individual.md`](evidence/individual.md),
+apartado «Semana 8», su commit SHA, decisión técnica, prueba ejecutada,
+resultado observado, limitación y uso declarado de IA. El equipo entrega en
+Classroom el mismo SHA final y el enlace a su ejecución de Actions.
+
+## Límites
+
+- La sincronización usa un receptor simulado; no hay servidor real.
+- Las E2E sólo cubren Chromium de escritorio.
+- La validación de fecha usa UTC y puede rechazar fechas válidas en zonas
+  horarias adelantadas; queda documentado como fallo pendiente en
+  `docs/test-strategy.md`.
