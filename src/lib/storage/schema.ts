@@ -1,5 +1,11 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 
+export type InspectionCoordinates = {
+  latitude: number;
+  longitude: number;
+  accuracy: number | null;
+};
+
 /**
  * Una inspección guardada localmente, pendiente de sincronizar o ya sincronizada.
  */
@@ -7,6 +13,7 @@ export type LocalInspection = {
   localId: string;          // identificador generado en el dispositivo (nunca cambia)
   serverId?: string;        // id que asigna el servidor una vez sincronizada
   location: string;
+  coordinates?: InspectionCoordinates; // ubicación GPS opcional
   date: string;
   inspector: string;
   status: "ok" | "attention";
