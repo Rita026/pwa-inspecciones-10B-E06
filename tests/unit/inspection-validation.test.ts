@@ -2,7 +2,7 @@
 import {
   validateInspectionForm,
   type InspectionFormData,
-} from "../src/lib/inspections/validation";
+} from "../../src/lib/inspections/validation";
 
 const validForm: InspectionFormData = {
   location: "Laboratorio de pruebas",
