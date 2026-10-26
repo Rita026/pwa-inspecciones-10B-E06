@@ -835,6 +835,6 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
   Sólo se prueba Chromium de escritorio. El contador de pendientes no se actualiza solo al guardar desde el formulario: la prueba pulsa «Actualizar contador», que es lo que haría la persona. Si se cambia el texto de una etiqueta o un botón del formulario, las E2E fallan a propósito y hay que actualizarlas junto con el cambio. La primera ejecución del workflow en GitHub descarga Chromium y tarda unos minutos más.
 
 - IA: herramienta, propósito, partes influidas y validación propia:
-  Usé un asistente de programación con IA para proponer la estructura de las pruebas, el workflow y el borrador de esta evidencia. Revisé e implementé el resultado: comprobé que los selectores coinciden con el formulario de Katherine, ejecuté las pruebas en mi equipo (en verde, y en rojo a propósito con el defecto controlado) y revisé que el workflow no oculte fallos ni use secretos.
+  Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las pruebas, el workflow y el borrador de esta evidencia. Revisé e implementé el resultado: comprobé que los selectores coinciden con el formulario de Katherine, ejecuté las pruebas en mi equipo (en verde, y en rojo a propósito con el defecto controlado) y revisé que el workflow no oculte fallos ni use secretos.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
