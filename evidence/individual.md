@@ -810,15 +810,31 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 - IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»: Utilicé ChatGPT como apoyo para desarrollar y revisar el formulario, la validación, la integración de la ubicación opcional, la prueba unitaria y la estrategia de pruebas. Validé los cambios ejecutando las pruebas unitarias, la comprobación de TypeScript y la compilación, además de probar manualmente el guardado local de una inspección.
 
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
 
-- Grupo y equipo: 
+- Grupo y equipo: 10°"B" E06
+
 - Mi contribución de esta semana y enlace:
+  Revisé e implementé las pruebas E2E con Playwright en `tests/e2e/inspection-flow.spec.ts` y su configuración `playwright.config.ts` (flujo completo y variante con permiso negado), y el workflow `.github/workflows/academic-evaluation.yml`. Agregué los scripts `test:e2e` y `test:e2e:build`, ignoré `playwright-report/` y `test-results/` y documenté los casos en el README y en `docs/test-strategy.md`.
+  Para los nombres de campos y botones revisé el formulario de Katherine (`src/components/inspection-form.tsx`, rama `feature/formulario-inspecciones`) y usé exactamente sus etiquetas: «Lugar de inspección», «Responsable», «Fecha», «Estado», «Número de hallazgos», «Resumen» y los botones «Obtener ubicación del dispositivo» y «Guardar inspección»; de la cola de Rita, «Actualizar contador» y «Simular sincronización».
+  Commits: [`7cae7b17ce2ba94651d201cf568e2cd06eb40d4e`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/7cae7b17ce2ba94651d201cf568e2cd06eb40d4e) (E2E), [`304c9516989d7b32993eba29443902f07ba539e1`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/304c9516989d7b32993eba29443902f07ba539e1) (workflow) y [`9516516f349c212f58ab96a68de7de2d3986e800`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/9516516f349c212f58ab96a68de7de2d3986e800) (documentación).
+
 - Decisión técnica y motivo:
+  Las E2E corren contra el build de producción (`next start`) en Chromium real, no contra mocks: así IndexedDB, el Service Worker y el permiso de geolocalización son los del navegador. La red se corta con `context.setOffline(true)` para demostrar que guardar no depende del servidor, y la persistencia se comprueba leyendo IndexedDB y recargando la página (mismo `localId` antes y después). La variante negada no concede el permiso, por lo que Chromium responde `PERMISSION_DENIED` igual que cuando la persona lo rechaza. Los selectores usan las etiquetas accesibles y la región de cada panel, para que la prueba falle si cambian los nombres acordados con el formulario. El workflow corre en orden lint, tipos, Jest, build y E2E, con `set -euo pipefail` y sin `continue-on-error`, para que un fallo no quede oculto, y sube el reporte de Playwright aunque falle.
+
 - Prueba/comando que ejecuté:
+  `npm run build` y `npx playwright test`; para descartar pruebas intermitentes, `npx playwright test --repeat-each=3`. Para comprobar que detectan errores, hice temporalmente que el formulario exigiera coordenadas, reconstruí y volví a ejecutar `npx playwright test`; luego restauré el archivo. También ejecuté localmente los pasos del workflow: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:unit -- --runInBand` y `CI=true npx playwright test`.
+
 - Resultado observado y enlace al reporte:
+  `npx playwright test`: 4 pruebas aprobadas (validación, flujo completo sin conexión, permiso concedido y permiso negado). Con `--repeat-each=3`: 12 de 12 aprobadas. Con el defecto introducido fallaron justo el flujo completo y la variante con permiso negado (no aparecía «Inspección guardada localmente…») y la de permiso concedido siguió pasando; al restaurar, las 4 volvieron a pasar. Pasos del workflow en local: lint sin advertencias, typecheck sin errores, starter PASS, Jest 16 suites y 78 pruebas aprobadas, build correcto y E2E 4/4. El reporte HTML y las trazas los sube el workflow como artefacto `academic-evidence-w08-e2e` en [Actions](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/workflows/academic-evaluation.yml).
+
 - Qué demuestra y qué no demuestra:
+  Demuestra, desde la interfaz, que datos inválidos no se guardan, que una inspección capturada sin conexión queda en IndexedDB con todos sus campos, sobrevive a la recarga con la misma identidad y se confirma una sola vez, y que negar la ubicación no bloquea el guardado ni la sincronización (se guarda sin `coordinates`). No demuestra sincronización con un servidor real (la app usa un receptor simulado), ni el comportamiento en Firefox, Safari o en un dispositivo móvil físico, ni la recarga de la página estando todavía sin conexión.
+
 - Limitación o riesgo:
-- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»:
+  Sólo se prueba Chromium de escritorio. El contador de pendientes no se actualiza solo al guardar desde el formulario: la prueba pulsa «Actualizar contador», que es lo que haría la persona. Si se cambia el texto de una etiqueta o un botón del formulario, las E2E fallan a propósito y hay que actualizarlas junto con el cambio. La primera ejecución del workflow en GitHub descarga Chromium y tarda unos minutos más.
+
+- IA: herramienta, propósito, partes influidas y validación propia:
+  Usé un asistente de programación con IA para proponer la estructura de las pruebas, el workflow y el borrador de esta evidencia. Revisé e implementé el resultado: comprobé que los selectores coinciden con el formulario de Katherine, ejecuté las pruebas en mi equipo (en verde, y en rojo a propósito con el defecto controlado) y revisé que el workflow no oculte fallos ni use secretos.
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
