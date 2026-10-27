@@ -837,4 +837,33 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 - IA: herramienta, propósito, partes influidas y validación propia:
   Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las pruebas, el workflow y el borrador de esta evidencia. Revisé e implementé el resultado: comprobé que los selectores coinciden con el formulario de Katherine, ejecuté las pruebas en mi equipo (en verde, y en rojo a propósito con el defecto controlado) y revisé que el workflow no oculte fallos ni use secretos.
 
+-------------------------------------------------------------------------------------------
+# Semana 9 — Evidencia individual
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
