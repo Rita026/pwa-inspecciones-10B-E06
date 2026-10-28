@@ -840,13 +840,19 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 -------------------------------------------------------------------------------------------
 # Semana 9 — Evidencia individual
 
-## Integrante:
-- Commit SHA evaluado:
-- Decisión técnica que puedo explicar:
-- Prueba que ejecuté y resultado:
-- Limitación o fallo diagnosticado:
-- Cambio que podría defender o modificar en vivo:
-- Uso declarado de IA (herramienta, propósito, validación):
+## Integrante: Katherine Daniela Gómez Merino
+
+- Commit SHA evaluado: d1603dabefb281985f576e6ba98fafc3b773069a
+
+- Decisión técnica que puedo explicar: Se creó un inventario de privacidad para identificar los datos manejados por las inspecciones y sus riesgos. También se agregó una utilidad de minimización que genera resúmenes con únicamente el estado de la inspección y el número de hallazgos, evitando copiar identificadores, nombres, coordenadas GPS y metadatos de sincronización.
+
+- Prueba que ejecuté y resultado: npm.cmd test: PASS (starter.spec.mjs). npm.cmd run build: compilación correcta y generación de páginas; npm.cmd run typecheck: terminó sin errores. git diff --cached --check: sin errores.
+
+- Limitación o fallo diagnosticado: robots.txt comunica instrucciones a los rastreadores web, pero no sustituye los controles de acceso. La utilidad de minimización debe utilizarse en los puntos de la aplicación donde se necesiten resúmenes; crearla no significa que todos los datos estén automáticamente protegidos.
+
+- Cambio que podría defender o modificar en vivo: Explicar el inventario de datos, justificar por qué las coordenadas GPS y el nombre del inspector requieren cuidado, y demostrar cómo toPrivacySafeSummary devuelve únicamente status y findings sin modificar el registro original.
+
+- Uso declarado de IA (herramienta, propósito, validación): ChatGPT se utilizó como apoyo para estructurar el inventario de privacidad, redactar la documentación y elaborar la utilidad de minimización. Los cambios se validaron mediante las pruebas, la compilación, la comprobación de tipos y Git. Estas comprobaciones no demuestran por sí solas que toda la aplicación aplique minimización de datos.
 
 
 ## Integrante:
