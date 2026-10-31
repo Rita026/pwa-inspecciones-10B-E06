@@ -477,9 +477,22 @@ Classroom el mismo SHA final y el enlace a su ejecución de Actions.
   horarias adelantadas; queda documentado como fallo pendiente en
   `docs/test-strategy.md`.
 
+
+# Semana 9 — Privacidad y minimización de datos
+
+La PWA utiliza datos sintéticos para las demostraciones académicas. Los registros de inspección pueden incluir ubicación del laboratorio, fecha, nombre del inspector, observaciones y coordenadas GPS opcionales.
+
+Para reducir la exposición de información, la utilidad `toPrivacySafeSummary` de `src/lib/security/privacy.ts` genera resúmenes que contienen únicamente el estado de la inspección y el número de hallazgos. La función no modifica los registros originales.
+
+Se recomienda recopilar únicamente los datos necesarios, evitar la exposición de coordenadas y nombres en registros técnicos, y definir reglas de conservación y eliminación de datos.
+
+El archivo `public/robots.txt` solicita a los rastreadores web que no rastreen el sitio. Esta instrucción no sustituye los controles de acceso ni garantiza la privacidad de la información.
+
+La utilidad debe utilizarse en los puntos donde se necesiten resúmenes; su existencia por sí sola no significa que toda la aplicación ya aplique minimización de datos.
+
 ---
 
-# Semana 9 — Cabeceras de seguridad (CSP) y verificación (Enrique)
+## Cabeceras de seguridad (CSP) y verificación (Enrique)
 
 ## Qué se agregó en esta parte
 
