@@ -637,3 +637,8 @@ Cada defecto se introdujo de forma temporal y se restauró antes de continuar.
   `package-lock.json` y con palabras en español de la documentación. Por eso
   `tests/security.spec.ts` busca formatos de credenciales y no palabras. Los
   archivos de esta parte no agregan coincidencias a esa búsqueda.
+
+  ## Modelo de amenazas
+
+El análisis de activos, amenazas y controles está en [`docs/threat-model.md`](docs/threat-model.md).
+Se alinea con el inventario de privacidad, las cabeceras CSP y las pruebas en `tests/security.spec.ts`.
