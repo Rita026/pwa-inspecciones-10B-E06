@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest"
 };
 
+// La CSP de src/middleware.ts usa un nonce por petición. Una página
+// prerenderada en el build no lo tendría y el navegador bloquearía sus scripts.
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
