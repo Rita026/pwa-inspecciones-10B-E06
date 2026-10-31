@@ -3,7 +3,8 @@
 Este es un proyecto acumulativo de la PWA de inspecciones de laboratorio.
 `START_HERE.md` y `ACTIVIDAD-01.md` conservan las instrucciones de arranque de
 la Semana 1. Las secciones de cada semana registran lo implementado después;
-la entrega vigente es la Semana 6, descrita al final de este archivo.
+la entrega vigente es la Semana 8; su resumen de setup, ejecución, verificación
+y evidencia está en «Semana 8 — Entrega» al final de este archivo.
 
 ## Entorno
 
@@ -393,3 +394,251 @@ npm run test:e2e:build   # build de producción + E2E
 # o, si ya existe el build:
 npm run test:e2e
 ```
+
+---
+
+# Semana 8 — Entrega: setup, ejecución, verificación y evidencia
+
+Pirámide de pruebas del flujo crítico (capturar sin conexión, conservar tras
+recargar y sincronizar una sola vez) automatizada en GitHub Actions. Sólo se
+usan datos sintéticos. El detalle de cada nivel, las decisiones, los supuestos,
+los límites y los fallos encontrados está en
+[`docs/test-strategy.md`](docs/test-strategy.md).
+
+## Entregables
+
+| Entregable | Ruta |
+|---|---|
+| Pruebas unitarias | [`tests/unit/`](tests/unit/) y suites de componentes y validación en `tests/` |
+| Pruebas de integración | [`tests/integration/`](tests/integration/) |
+| Pruebas E2E | [`tests/e2e/`](tests/e2e/) y [`playwright.config.ts`](playwright.config.ts) |
+| Estrategia de pruebas | [`docs/test-strategy.md`](docs/test-strategy.md) |
+| Workflow de CI | [`.github/workflows/academic-evaluation.yml`](.github/workflows/academic-evaluation.yml) |
+| Evidencia individual | [`evidence/individual.md`](evidence/individual.md), apartado «Semana 8» |
+
+## Setup
+
+Requisitos: Node.js 20 o posterior (el CI usa Node 20; en local se probó con
+Node v22.22.0 y v24.21.0), npm, Git y, para E2E, Chromium de Playwright.
+
+```bash
+npm ci
+npx playwright install chromium   # sólo una vez, para las E2E
+```
+
+## Ejecución
+
+```bash
+npm run dev        # desarrollo en http://localhost:3000
+npm run build && npm run start   # producción
+```
+
+## Verificación
+
+```bash
+make verify                        # equivale a: npm run verify
+npm run lint
+npm run typecheck
+npm test                           # prueba del starter
+npm run test:unit -- --runInBand   # unitarias + integración (Jest)
+npm run test:e2e:build             # build de producción + E2E (Playwright)
+```
+
+En Windows sin Make, el equivalente exacto de `make verify` es
+`npm.cmd run verify`. `make verify` comprueba la estructura, ejecuta el starter,
+toda la suite Jest, lint, typecheck y build, y genera
+`reports/verification.json`. Las E2E se ejecutan aparte con
+`npm run test:e2e:build` y en el workflow.
+
+Resultados observados en `main` (commit `38810e9`):
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run lint` | Sin advertencias ni errores |
+| `npm run typecheck` | Sin errores |
+| `npm test` | `starter.spec.mjs: PASS` |
+| `npm run test:unit -- --runInBand` | 16 suites y 78 pruebas aprobadas |
+| `npm run build` | Compilación de producción correcta |
+| `npx playwright test` | 4 de 4 aprobadas |
+| GitHub Actions | [Academic Evaluation en verde](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/runs/40263154007) y workflows de semanas 1 a 6 en verde |
+
+## Evidencia
+
+Cada integrante registra en [`evidence/individual.md`](evidence/individual.md),
+apartado «Semana 8», su commit SHA, decisión técnica, prueba ejecutada,
+resultado observado, limitación y uso declarado de IA. El equipo entrega en
+Classroom el mismo SHA final y el enlace a su ejecución de Actions.
+
+## Límites
+
+- La sincronización usa un receptor simulado; no hay servidor real.
+- Las E2E sólo cubren Chromium de escritorio.
+- La validación de fecha usa UTC y puede rechazar fechas válidas en zonas
+  horarias adelantadas; queda documentado como fallo pendiente en
+  `docs/test-strategy.md`.
+
+
+# Semana 9 — Privacidad y minimización de datos
+
+La PWA utiliza datos sintéticos para las demostraciones académicas. Los registros de inspección pueden incluir ubicación del laboratorio, fecha, nombre del inspector, observaciones y coordenadas GPS opcionales.
+
+Para reducir la exposición de información, la utilidad `toPrivacySafeSummary` de `src/lib/security/privacy.ts` genera resúmenes que contienen únicamente el estado de la inspección y el número de hallazgos. La función no modifica los registros originales.
+
+Se recomienda recopilar únicamente los datos necesarios, evitar la exposición de coordenadas y nombres en registros técnicos, y definir reglas de conservación y eliminación de datos.
+
+El archivo `public/robots.txt` solicita a los rastreadores web que no rastreen el sitio. Esta instrucción no sustituye los controles de acceso ni garantiza la privacidad de la información.
+
+La utilidad debe utilizarse en los puntos donde se necesiten resúmenes; su existencia por sí sola no significa que toda la aplicación ya aplique minimización de datos.
+
+---
+
+## Cabeceras de seguridad (CSP) y verificación (Enrique)
+
+## Qué se agregó en esta parte
+
+| Archivo | Qué hace |
+|---|---|
+| [`src/lib/security/headers.ts`](src/lib/security/headers.ts) | Construye la CSP con nonce y las demás cabeceras de seguridad. |
+| [`src/middleware.ts`](src/middleware.ts) | Genera un nonce por petición y aplica las cabeceras a páginas, API, `sw.js`, manifest y `offline.html`. |
+| `src/app/layout.tsx` | `dynamic = "force-dynamic"`: cada página se renderiza por petición para llevar su nonce. |
+| `next.config.mjs` | `poweredByHeader: false`: deja de enviar `X-Powered-By: Next.js`. |
+| [`tests/security.spec.ts`](tests/security.spec.ts) | Jest: reglas de la CSP y de las cabeceras, el middleware y las credenciales fuera del repositorio. |
+| [`tests/e2e/security-headers.spec.ts`](tests/e2e/security-headers.spec.ts) | Playwright: cabeceras reales del build de producción y la app funcionando bajo la CSP. |
+| [`.github/workflows/academic-evaluation.yml`](.github/workflows/academic-evaluation.yml) | Paso AC-04 de seguridad y E2E de cabeceras en cada push y pull request. |
+
+## Cabeceras que envía la aplicación
+
+| Cabecera | Valor | Para qué |
+|---|---|---|
+| `Content-Security-Policy` | `script-src 'self' 'nonce-…' 'strict-dynamic'`; `object-src 'none'`; `frame-ancestors 'none'`; `base-uri`, `form-action`, `connect-src`, `worker-src` y `manifest-src` en `'self'` | Un script inyectado sin el nonce de la respuesta no se ejecuta; no se admite ningún origen externo. |
+| `X-Content-Type-Options` | `nosniff` | El navegador no adivina el tipo de un archivo. |
+| `X-Frame-Options` | `DENY` | Respaldo de `frame-ancestors` contra clickjacking en navegadores antiguos. |
+| `Referrer-Policy` | `same-origin` | Las URL de detalle, que llevan el id de la inspección, no se envían a otros sitios. |
+| `Permissions-Policy` | `camera=(self), geolocation=(self), microphone=(), payment=(), usb=()` | Cámara y ubicación solo para la propia app (`src/lib/device/`); lo demás queda apagado. |
+| `Cross-Origin-Opener-Policy` | `same-origin` | Aísla la ventana de páginas de otro origen que la abran. |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains` | Solo en producción; el navegador lo aplica únicamente bajo HTTPS. |
+
+## Decisión: nonce por petición en el middleware
+
+Next.js 14 inserta `<script>` en línea en cada página. Había dos caminos: una
+CSP fija en `next.config.mjs` con `'unsafe-inline'` en `script-src`, o un nonce
+distinto en cada respuesta. Con `'unsafe-inline'` la CSP casi no frena un XSS,
+porque cualquier `<script>` inyectado también se ejecutaría. Se eligió el
+nonce: el middleware lo genera con `crypto.getRandomValues` (128 bits), lo pone
+en la CSP de la respuesta y en la de la petición, y Next.js lo toma de ahí y lo
+agrega a sus propios scripts. `'strict-dynamic'` permite los chunks que esos
+scripts cargan después; `'self'` queda solo como respaldo para navegadores sin
+CSP nivel 3.
+
+Costo: ninguna página puede prerenderarse en el build, porque un HTML estático
+no tendría el nonce. Por eso el layout fuerza el render dinámico. Antes solo
+`/_not-found` era estática; las demás rutas ya eran dinámicas.
+
+Otras decisiones:
+
+- `style-src` conserva `'unsafe-inline'` porque `public/offline.html` usa un
+  `<style>` en línea; un estilo no ejecuta código.
+- En `next dev` se agrega `'unsafe-eval'` (lo necesita React Refresh) y no se
+  envía HSTS, para no fijar HTTPS en `localhost`.
+- El Service Worker guarda `/` con sus cabeceras. Sin red entrega el mismo HTML
+  y la misma CSP, con el mismo nonce, así que la página guardada sigue
+  funcionando.
+
+## Credenciales fuera del repositorio
+
+`tests/security.spec.ts` revisa los archivos versionados y los nuevos que Git
+no ignora, es decir, lo que subiría un `git add .`:
+
+- ningún `.env` puede subirse, y Git ignora `.env`, `.env.local` y
+  `.env.production.local`, pero no `.env.example`;
+- ningún archivo contiene credenciales con formato conocido: claves privadas
+  PEM y claves o credenciales de AWS, GitHub, Google Cloud, Stripe (modo live),
+  Slack, JWT firmados y URL con usuario y contraseña. Un caso de control con
+  muestras sintéticas, armadas al ejecutar, comprueba que el detector sí las
+  reconoce;
+- el código no usa variables `NEXT_PUBLIC_`, que Next.js copia al JavaScript
+  que descarga el navegador.
+
+## Cómo verificar
+
+```bash
+npm ci
+npm run test:security              # 32 pruebas: CSP, cabeceras, middleware y credenciales
+npm run build
+npx playwright install chromium    # solo la primera vez
+npx playwright test                # 14 E2E: flujo de inspección + cabeceras de seguridad
+npm run verify                     # estructura, starter, Jest, lint, tipos y build
+```
+
+En Windows sin Make, `npm.cmd run verify` es el equivalente de `make verify`.
+Para revisar las cabeceras a mano con el build de producción:
+
+```bash
+npm run build
+npm run start
+curl -I http://localhost:3000/     # en PowerShell: curl.exe -I http://localhost:3000/
+```
+
+En el navegador: DevTools → Network → documento `/` → Response Headers. En la
+consola no debe aparecer ningún mensaje de «Content Security Policy».
+
+### Qué observa cada prueba
+
+| Prueba | Observa | Queda fuera |
+|---|---|---|
+| `tests/security.spec.ts` (Jest) | La CSP generada: sin `'unsafe-inline'` ni `'unsafe-eval'` en los scripts de producción, sin orígenes externos, con nonce aleatorio y validado. Las demás cabeceras, que el middleware las aplica y entrega a Next.js el mismo nonce, y las credenciales. | Lo que recibe realmente un navegador. |
+| `tests/e2e/security-headers.spec.ts` (Playwright) | Con `next start`: cabeceras en `/`, `/inspecciones`, el detalle, la API, `sw.js`, el manifest y `offline.html`; cada `<script>` del HTML con el nonce de su respuesta; la app se hidrata, registra el Service Worker y consulta la API sin violaciones de CSP; un `<script>` inyectado en el HTML sin nonce no se ejecuta y uno con el nonce sí (control). | Firefox, Safari y móviles; HSTS con HTTPS real. |
+| `tests/e2e/inspection-flow.spec.ts` | El flujo de la semana 8 (sin conexión, IndexedDB, sincronización y ubicación concedida o negada) sigue pasando bajo la CSP. | Lo indicado en la semana 8. |
+
+### Workflow
+
+`.github/workflows/academic-evaluation.yml` corre en cada push y pull request:
+instalación limpia, artefactos (incluye los de esta parte), lint y tipos,
+starter y Jest, **AC-04 Seguridad** (`npm run test:security`), build y
+**AC-06 E2E** (incluye las cabeceras). Ningún paso usa `continue-on-error` ni
+credenciales, y sube `playwright-report/` y `test-results/` en el artefacto
+`academic-evidence-e2e-seguridad`. La existencia de los cinco artefactos del
+equipo para esta semana la revisa el workflow del docente
+`week-09-w09-security-privacy.yml` (AC-02).
+
+### Resultados observados
+
+Rama `feat/enrique-seguridad-semana-09`, Windows, Node.js v24.21.0:
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run verify` | `pass`: estructura, starter, Jest (17 suites y 110 pruebas), lint, tipos y build |
+| `npm run test:security` | 32 de 32 aprobadas |
+| `CI=true npx playwright test` | 14 de 14 aprobadas |
+| `npx playwright test --repeat-each=3` | 42 de 42 aprobadas |
+| Defecto: `'unsafe-inline'` en `script-src` | Fallan 2 pruebas de Jest |
+| Defecto: archivo nuevo con una clave de AWS falsa | Falla el escaneo e indica `archivo:línea` |
+| Defecto: el middleware no envía la CSP | Fallan 9 de las 10 E2E de cabeceras |
+| Defecto: `geolocation=()` en `Permissions-Policy` | Fallan 1 prueba de Jest y la E2E de ubicación concedida |
+
+Cada defecto se introdujo de forma temporal y se restauró antes de continuar.
+
+## Límites
+
+- La CSP se comprobó en Chromium de escritorio; no en Firefox, Safari ni en
+  dispositivos móviles.
+- HSTS solo tiene efecto con HTTPS y las pruebas corren en `http://127.0.0.1`.
+  No se agregó `upgrade-insecure-requests`: la app no carga recursos de otros
+  orígenes y se prueba en http local.
+- `style-src` admite estilos en línea.
+- Los archivos de `/_next/static` no pasan por el middleware (llevan hash en el
+  nombre y no son HTML), así que no llevan estas cabeceras.
+- La API `/api/inspecciones/[id]` no tiene autenticación; las cabeceras no la
+  sustituyen.
+- El escaneo reconoce credenciales con un formato conocido; un valor sin
+  prefijo reconocible no lo detecta.
+- La búsqueda por palabras de `public-tests/check.sh` (línea 5) ya fallaba en
+  `develop` antes de esta parte, porque coincide con nombres de dependencias en
+  `package-lock.json` y con palabras en español de la documentación. Por eso
+  `tests/security.spec.ts` busca formatos de credenciales y no palabras. Los
+  archivos de esta parte no agregan coincidencias a esa búsqueda.
+
+  ## Modelo de amenazas
+
+El análisis de activos, amenazas y controles está en [`docs/threat-model.md`](docs/threat-model.md).
+Se alinea con el inventario de privacidad, las cabeceras CSP y las pruebas en `tests/security.spec.ts`.

@@ -12,6 +12,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test:coverage": "jest --coverage",
+    "test:security": "jest tests/security.spec.ts",
     "test:e2e": "playwright test",
     "test:e2e:build": "npm run build && playwright test"
   },

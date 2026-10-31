@@ -826,7 +826,7 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
   `npm run build` y `npx playwright test`; para descartar pruebas intermitentes, `npx playwright test --repeat-each=3`. Para comprobar que detectan errores, hice temporalmente que el formulario exigiera coordenadas, reconstruí y volví a ejecutar `npx playwright test`; luego restauré el archivo. También ejecuté localmente los pasos del workflow: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:unit -- --runInBand` y `CI=true npx playwright test`.
 
 - Resultado observado y enlace al reporte:
-  `npx playwright test`: 4 pruebas aprobadas (validación, flujo completo sin conexión, permiso concedido y permiso negado). Con `--repeat-each=3`: 12 de 12 aprobadas. Con el defecto introducido fallaron justo el flujo completo y la variante con permiso negado (no aparecía «Inspección guardada localmente…») y la de permiso concedido siguió pasando; al restaurar, las 4 volvieron a pasar. Pasos del workflow en local: lint sin advertencias, typecheck sin errores, starter PASS, Jest 16 suites y 78 pruebas aprobadas, build correcto y E2E 4/4. El reporte HTML y las trazas los sube el workflow como artefacto `academic-evidence-w08-e2e` en [Actions](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/workflows/academic-evaluation.yml).
+  `npx playwright test`: 4 pruebas aprobadas (validación, flujo completo sin conexión, permiso concedido y permiso negado). Con `--repeat-each=3`: 12 de 12 aprobadas. Con el defecto introducido fallaron justo el flujo completo y la variante con permiso negado (no aparecía «Inspección guardada localmente…») y la de permiso concedido siguió pasando; al restaurar, las 4 volvieron a pasar. Pasos del workflow en local: lint sin advertencias, typecheck sin errores, starter PASS, Jest 16 suites y 78 pruebas aprobadas, build correcto y E2E 4/4. Ejecución del workflow en verde sobre `main` (commit `38810e96bd50969f7eb2a3ee302b28769bb30d10`): [Academic Evaluation](https://github.com/Rita026/pwa-inspecciones-10B-E06/actions/runs/40263154007); el reporte HTML y las trazas quedan en su artefacto `academic-evidence-w08-e2e`. También documenté la pirámide de pruebas, el CI, los supuestos y los fallos encontrados en `docs/test-strategy.md` y la sección «Semana 8 — Entrega» del README.
 
 - Qué demuestra y qué no demuestra:
   Demuestra, desde la interfaz, que datos inválidos no se guardan, que una inspección capturada sin conexión queda en IndexedDB con todos sus campos, sobrevive a la recarga con la misma identidad y se confirma una sola vez, y que negar la ubicación no bloquea el guardado ni la sincronización (se guarda sin `coordinates`). No demuestra sincronización con un servidor real (la app usa un receptor simulado), ni el comportamiento en Firefox, Safari o en un dispositivo móvil físico, ni la recarga de la página estando todavía sin conexión.
@@ -836,5 +836,71 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 
 - IA: herramienta, propósito, partes influidas y validación propia:
   Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las pruebas, el workflow y el borrador de esta evidencia. Revisé e implementé el resultado: comprobé que los selectores coinciden con el formulario de Katherine, ejecuté las pruebas en mi equipo (en verde, y en rojo a propósito con el defecto controlado) y revisé que el workflow no oculte fallos ni use secretos.
+
+-------------------------------------------------------------------------------------------
+# Semana 9 — Evidencia individual
+
+## Integrante: Katherine Daniela Gómez Merino
+
+- Commit SHA evaluado: d1603dabefb281985f576e6ba98fafc3b773069a
+
+- Decisión técnica que puedo explicar: Se creó un inventario de privacidad para identificar los datos manejados por las inspecciones y sus riesgos. También se agregó una utilidad de minimización que genera resúmenes con únicamente el estado de la inspección y el número de hallazgos, evitando copiar identificadores, nombres, coordenadas GPS y metadatos de sincronización.
+
+- Prueba que ejecuté y resultado: npm.cmd test: PASS (starter.spec.mjs). npm.cmd run build: compilación correcta y generación de páginas; npm.cmd run typecheck: terminó sin errores. git diff --cached --check: sin errores.
+
+- Limitación o fallo diagnosticado: robots.txt comunica instrucciones a los rastreadores web, pero no sustituye los controles de acceso. La utilidad de minimización debe utilizarse en los puntos de la aplicación donde se necesiten resúmenes; crearla no significa que todos los datos estén automáticamente protegidos.
+
+- Cambio que podría defender o modificar en vivo: Explicar el inventario de datos, justificar por qué las coordenadas GPS y el nombre del inspector requieren cuidado, y demostrar cómo toPrivacySafeSummary devuelve únicamente status y findings sin modificar el registro original.
+
+- Uso declarado de IA (herramienta, propósito, validación): ChatGPT se utilizó como apoyo para estructurar el inventario de privacidad, redactar la documentación y elaborar la utilidad de minimización. Los cambios se validaron mediante las pruebas, la compilación, la comprobación de tipos y Git. Estas comprobaciones no demuestran por sí solas que toda la aplicación aplique minimización de datos.
+
+
+## Integrante: Enrique Julian Gracia López
+
+- Commit SHA evaluado:
+  [`457819c279066c7d720dc6915fe5c115e2150d90`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/457819c279066c7d720dc6915fe5c115e2150d90), rama `feat/enrique-seguridad-semana-09` integrada en `develop`. Incluye mis cuatro commits: [`b3c57b7`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/b3c57b7f448a65d579fb29c763d97f63d25272a0) (cabeceras y middleware), [`5ec7a94`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/5ec7a9433b6cdedb121376ccc8edb0cdf65bffe7) (pruebas), [`d6b2c68`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/d6b2c688bb61e4d648f818033c09b95ee6314a95) (workflow) y [`457819c`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/457819c279066c7d720dc6915fe5c115e2150d90) (README).
+
+- Decisión técnica que puedo explicar:
+  Apliqué la CSP con un nonce nuevo por petición en `src/middleware.ts`, con las reglas en `src/lib/security/headers.ts`, en lugar de una CSP fija con `'unsafe-inline'` en `next.config.mjs`. Next.js 14 inserta `<script>` en línea en cada página; con `'unsafe-inline'` cualquier script inyectado también se ejecutaría. El middleware pone el nonce en la CSP de la petición, Next.js lo copia a sus scripts (los 18 `<script>` de la portada lo llevan) y `'strict-dynamic'` deja cargar los chunks que esos scripts piden. El costo es que ninguna página se puede prerenderar, por eso el layout usa `force-dynamic` (antes solo `/_not-found` era estática). `Permissions-Policy` deja la cámara y la ubicación solo al propio origen porque las usa `src/lib/device/`, y `Referrer-Policy: same-origin` evita mandar a otros sitios las URL de detalle con el id de la inspección, un dato que el inventario de privacidad pide no exponer. También quité `X-Powered-By`.
+
+- Prueba que ejecuté y resultado:
+  `npm run test:security`: 32 de 32. Observa la CSP generada (en producción los scripts solo se ejecutan con el nonce, sin `'unsafe-inline'`, `'unsafe-eval'` ni orígenes externos, y un nonce con comillas o `;` se rechaza), las demás cabeceras, que el middleware las aplica y entrega a Next.js el mismo nonce, que ningún `.env` se puede subir, que no hay credenciales con formato conocido en los archivos (con un control de muestras sintéticas) y que el código no usa variables `NEXT_PUBLIC_`.
+  `CI=true npx playwright test` contra `next start`: 14 de 14, incluidas las 4 de la semana 8, que siguen pasando bajo la CSP; con `--repeat-each=3`, 42 de 42. Las E2E de cabeceras revisan 7 rutas, el nonce en cada `<script>`, que la app se hidrata, registra el Service Worker y consulta la API sin mensajes de CSP, y que un `<script>` inyectado en el HTML sin nonce no se ejecuta mientras que uno con el nonce sí.
+  `npm run verify`: `pass` (17 suites y 110 pruebas de Jest, lint, tipos y build).
+  Defectos controlados, cada uno restaurado después: `'unsafe-inline'` en `script-src` hace fallar 2 pruebas de Jest; un archivo nuevo con una clave de AWS falsa hace fallar el escaneo, que indica `src/lib/config-prueba.ts:1`; si el middleware no envía la CSP fallan 9 de las 10 E2E de cabeceras.
+  Queda fuera: Firefox, Safari y móviles, HSTS con HTTPS real y credenciales sin un formato reconocible.
+
+- Limitación o fallo diagnosticado:
+  Mi primera prueba de inyección agregaba el `<script>` con `page.evaluate` de Playwright y falló: el script sí se ejecutó. La misma inyección hecha en el HTML que entrega el servidor sí fue bloqueada, así que el problema estaba en la prueba y no en la CSP: el código que Playwright ejecuta desde fuera de la página no representa un XSS. La corregí interceptando la respuesta con `page.route` y conservando sus cabeceras, y agregué un script con el nonce correcto como control de que la inyección sí llega a la página.
+  También diagnostiqué que la búsqueda por palabras de `public-tests/check.sh` ya fallaba en `develop`: coincide con nombres de dependencias en `package-lock.json` y con palabras de la documentación. Por eso mi prueba busca formatos de credenciales y no palabras; mis archivos no agregan coincidencias.
+  Límites que quedan: `style-src` admite estilos en línea (los usa `offline.html`), `/_next/static` no pasa por el middleware y la API `/api/inspecciones/[id]` no tiene autenticación.
+
+- Cambio que podría defender o modificar en vivo:
+  Cambiar `geolocation=(self)` por `geolocation=()` en `PERMISSIONS_POLICY` (`src/lib/security/headers.ts`). Lo probé: falla la prueba de Jest de `Permissions-Policy` y, tras `npm run build`, falla la E2E «con permiso concedido la ubicación se guarda junto con la inspección», porque la cabecera bloquea la ubicación aunque la persona la conceda. También puedo agregar `'unsafe-inline'` a `script-src` y mostrar qué pruebas fallan y por qué.
+
+- Uso declarado de IA (herramienta, propósito, validación):
+  Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las cabeceras, el middleware, las pruebas, el paso del workflow y el borrador de esta evidencia. Apliqué y revisé el resultado: comprobé que cada directiva corresponde a algo que la app usa (Service Worker, manifest, API, cámara y ubicación), revisé las cabeceras reales con `next start` y `curl`, ejecuté las pruebas en mi equipo en verde y en rojo con los defectos controlados, y revisé que el workflow no oculte fallos ni use credenciales.
+
+
+## Integrante: Rita González Sánchez
+
+- Commit SHA evaluado:
+  [`1ccf9302b205971fbe97bc073df8e6cb0b61ddae`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/1ccf9302b205971fbe97bc073df8e6cb0b61ddae) — `docs/threat-model.md` (modelo de amenazas semana 9). Documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/1ccf9302b205971fbe97bc073df8e6cb0b61ddae/docs/threat-model.md
+
+- Decisión técnica que puedo explicar:
+  Elaborar el modelo de amenazas a partir de lo ya implementado por el equipo, sin inventar controles. Se mapearon activos reales (datos de inspección en IndexedDB, coordenadas opcionales, metadatos de sync, Service Worker, integridad de scripts, permisos de cámara/geo) a amenazas (XSS en campos de texto, clickjacking, abuso de permisos, filtración en resúmenes, secretos en el repo, Referer con IDs) y a controles existentes: CSP con nonce y cabeceras (`src/lib/security/headers.ts` + middleware), validación del formulario, `toPrivacySafeSummary` (`privacy.ts`), inventario de privacidad, `robots.txt` y `tests/security.spec.ts`. Se documentaron residuos (IndexedDB legible en el mismo origen, API demo sin auth, robots no es control de acceso) para no sobreclaim de seguridad.
+
+- Prueba que ejecuté y resultado:
+  Verifiqué que el artefacto `docs/threat-model.md` está en el commit evaluado y que el check de semana 9 exige el conjunto completo (`threat-model`, `privacy-data-inventory`, `src/lib/security/`, `tests/security.spec.ts`, `public/robots.txt`). Con el modelo en develop, el fallo previo del workflow por falta de `threat-model.md` queda cubierto. El enlace al reporte global de Actions se actualizará con el SHA final en `main` tras el merge develop → main.
+
+- Limitación o fallo diagnosticado:
+  El modelo solo es tan fuerte como la implementación: si `toPrivacySafeSummary` no se usa en todos los puntos de salida, el riesgo de filtración en logs/resúmenes permanece. HSTS y HTTPS reales dependen del despliegue; en local no se fuerza HSTS. La API de demostración no tiene autenticación ni autorización de servidor.
+
+- Cambio que podría defender o modificar en vivo:
+  Añadir o quitar una amenaza/control en la tabla (por ejemplo enlazar explícitamente T1 con una prueba de validación o de CSP) y explicar por qué el control mitiga o no del todo el riesgo residual en IndexedDB.
+
+- Uso declarado de IA (herramienta, propósito, validación):
+  Asistencia para estructurar el documento (secciones, tablas de activos y amenazas) alineado al código del repositorio. Validación propia: crucé cada control con rutas reales (`headers.ts`, `privacy.ts`, `validation.ts`, `robots.txt`, pruebas de seguridad) y contrasté los límites con lo ya documentado por el equipo.
+
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
