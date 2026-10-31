@@ -1,5 +1,6 @@
-# Retroalimentación formativa de la Semana 8: no sustituye la revisión del docente.
-# Reproduce desde cero instalación, calidad, pruebas unitarias/integración, build y E2E.
+# Retroalimentación formativa de las semanas 8 y 9: no sustituye la revisión del docente.
+# Reproduce desde cero instalación, calidad, pruebas unitarias/integración,
+# seguridad (cabeceras y credenciales), build y E2E.
 name: Academic Evaluation
 
 on:
@@ -16,7 +17,7 @@ concurrency:
 
 jobs:
   evaluate:
-    name: Evaluación académica (semana 8)
+    name: Evaluación académica (semanas 8 y 9)
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -55,6 +56,10 @@ jobs:
             tests/unit/queue.spec.ts \
             tests/e2e/inspection-flow.spec.ts \
             playwright.config.ts \
+            src/lib/security/headers.ts \
+            src/middleware.ts \
+            tests/security.spec.ts \
+            tests/e2e/security-headers.spec.ts \
             evidence/individual.md; do
             test -s "$file" || { echo "Falta o está vacío: $file"; exit 1; }
           done
@@ -73,7 +78,14 @@ jobs:
           npm test
           npm run test:unit -- --runInBand
 
-      - name: AC-04 - Build de producción
+      # Ya corre dentro de Jest; el paso aparte deja visible su resultado en Actions.
+      - name: AC-04 - Seguridad (CSP, cabeceras y credenciales)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:security -- --runInBand --verbose
+
+      - name: AC-05 - Build de producción
         shell: bash
         run: |
           set -euo pipefail
@@ -85,7 +97,7 @@ jobs:
           set -euo pipefail
           npx playwright install --with-deps chromium
 
-      - name: AC-05 - E2E con Playwright (flujo completo y permiso negado)
+      - name: AC-06 - E2E con Playwright (flujo completo, permiso negado y cabeceras de seguridad)
         shell: bash
         run: |
           set -euo pipefail
@@ -95,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: academic-evidence-w08-e2e
+          name: academic-evidence-e2e-seguridad
           if-no-files-found: ignore
           retention-days: 14
           path: |

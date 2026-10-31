@@ -14,6 +14,12 @@ required.push(
   "tests/notifications-ssr.test.ts",
   "tests/notifications-demo-panel.test.tsx"
 );
+required.push(
+  "src/lib/security/headers.ts",
+  "src/middleware.ts",
+  "tests/security.spec.ts",
+  "tests/e2e/security-headers.spec.ts"
+);
 const missing = required.filter(file => !existsSync(resolve(root, file)));
 const structureOnly = process.argv.includes("--structure");
 if (structureOnly) {
