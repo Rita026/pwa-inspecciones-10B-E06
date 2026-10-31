@@ -849,13 +849,31 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 - Uso declarado de IA (herramienta, propósito, validación):
 
 
-## Integrante:
+## Integrante: Enrique Julian Gracia López
+
 - Commit SHA evaluado:
+  [`457819c279066c7d720dc6915fe5c115e2150d90`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/457819c279066c7d720dc6915fe5c115e2150d90), rama `feat/enrique-seguridad-semana-09` integrada en `develop`. Incluye mis cuatro commits: [`b3c57b7`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/b3c57b7f448a65d579fb29c763d97f63d25272a0) (cabeceras y middleware), [`5ec7a94`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/5ec7a9433b6cdedb121376ccc8edb0cdf65bffe7) (pruebas), [`d6b2c68`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/d6b2c688bb61e4d648f818033c09b95ee6314a95) (workflow) y [`457819c`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/457819c279066c7d720dc6915fe5c115e2150d90) (README).
+
 - Decisión técnica que puedo explicar:
+  Apliqué la CSP con un nonce nuevo por petición en `src/middleware.ts`, con las reglas en `src/lib/security/headers.ts`, en lugar de una CSP fija con `'unsafe-inline'` en `next.config.mjs`. Next.js 14 inserta `<script>` en línea en cada página; con `'unsafe-inline'` cualquier script inyectado también se ejecutaría. El middleware pone el nonce en la CSP de la petición, Next.js lo copia a sus scripts (los 18 `<script>` de la portada lo llevan) y `'strict-dynamic'` deja cargar los chunks que esos scripts piden. El costo es que ninguna página se puede prerenderar, por eso el layout usa `force-dynamic` (antes solo `/_not-found` era estática). `Permissions-Policy` deja la cámara y la ubicación solo al propio origen porque las usa `src/lib/device/`, y `Referrer-Policy: same-origin` evita mandar a otros sitios las URL de detalle con el id de la inspección, un dato que el inventario de privacidad pide no exponer. También quité `X-Powered-By`.
+
 - Prueba que ejecuté y resultado:
+  `npm run test:security`: 32 de 32. Observa la CSP generada (en producción los scripts solo se ejecutan con el nonce, sin `'unsafe-inline'`, `'unsafe-eval'` ni orígenes externos, y un nonce con comillas o `;` se rechaza), las demás cabeceras, que el middleware las aplica y entrega a Next.js el mismo nonce, que ningún `.env` se puede subir, que no hay credenciales con formato conocido en los archivos (con un control de muestras sintéticas) y que el código no usa variables `NEXT_PUBLIC_`.
+  `CI=true npx playwright test` contra `next start`: 14 de 14, incluidas las 4 de la semana 8, que siguen pasando bajo la CSP; con `--repeat-each=3`, 42 de 42. Las E2E de cabeceras revisan 7 rutas, el nonce en cada `<script>`, que la app se hidrata, registra el Service Worker y consulta la API sin mensajes de CSP, y que un `<script>` inyectado en el HTML sin nonce no se ejecuta mientras que uno con el nonce sí.
+  `npm run verify`: `pass` (17 suites y 110 pruebas de Jest, lint, tipos y build).
+  Defectos controlados, cada uno restaurado después: `'unsafe-inline'` en `script-src` hace fallar 2 pruebas de Jest; un archivo nuevo con una clave de AWS falsa hace fallar el escaneo, que indica `src/lib/config-prueba.ts:1`; si el middleware no envía la CSP fallan 9 de las 10 E2E de cabeceras.
+  Queda fuera: Firefox, Safari y móviles, HSTS con HTTPS real y credenciales sin un formato reconocible.
+
 - Limitación o fallo diagnosticado:
+  Mi primera prueba de inyección agregaba el `<script>` con `page.evaluate` de Playwright y falló: el script sí se ejecutó. La misma inyección hecha en el HTML que entrega el servidor sí fue bloqueada, así que el problema estaba en la prueba y no en la CSP: el código que Playwright ejecuta desde fuera de la página no representa un XSS. La corregí interceptando la respuesta con `page.route` y conservando sus cabeceras, y agregué un script con el nonce correcto como control de que la inyección sí llega a la página.
+  También diagnostiqué que la búsqueda por palabras de `public-tests/check.sh` ya fallaba en `develop`: coincide con nombres de dependencias en `package-lock.json` y con palabras de la documentación. Por eso mi prueba busca formatos de credenciales y no palabras; mis archivos no agregan coincidencias.
+  Límites que quedan: `style-src` admite estilos en línea (los usa `offline.html`), `/_next/static` no pasa por el middleware y la API `/api/inspecciones/[id]` no tiene autenticación.
+
 - Cambio que podría defender o modificar en vivo:
+  Cambiar `geolocation=(self)` por `geolocation=()` en `PERMISSIONS_POLICY` (`src/lib/security/headers.ts`). Lo probé: falla la prueba de Jest de `Permissions-Policy` y, tras `npm run build`, falla la E2E «con permiso concedido la ubicación se guarda junto con la inspección», porque la cabecera bloquea la ubicación aunque la persona la conceda. También puedo agregar `'unsafe-inline'` a `script-src` y mostrar qué pruebas fallan y por qué.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las cabeceras, el middleware, las pruebas, el paso del workflow y el borrador de esta evidencia. Apliqué y revisé el resultado: comprobé que cada directiva corresponde a algo que la app usa (Service Worker, manifest, API, cámara y ubicación), revisé las cabeceras reales con `next start` y `curl`, ejecuté las pruebas en mi equipo en verde y en rojo con los defectos controlados, y revisé que el workflow no oculte fallos ni use credenciales.
 
 ## Integrante:
 - Commit SHA evaluado:
