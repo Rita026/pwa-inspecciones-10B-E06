@@ -881,13 +881,26 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
 - Uso declarado de IA (herramienta, propósito, validación):
   Usé Claude Code (Anthropic) como asistente de programación para proponer la estructura de las cabeceras, el middleware, las pruebas, el paso del workflow y el borrador de esta evidencia. Apliqué y revisé el resultado: comprobé que cada directiva corresponde a algo que la app usa (Service Worker, manifest, API, cámara y ubicación), revisé las cabeceras reales con `next start` y `curl`, ejecuté las pruebas en mi equipo en verde y en rojo con los defectos controlados, y revisé que el workflow no oculte fallos ni use credenciales.
 
-## Integrante:
+
+## Integrante: Rita González Sánchez
+
 - Commit SHA evaluado:
+  [`1ccf9302b205971fbe97bc073df8e6cb0b61ddae`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/1ccf9302b205971fbe97bc073df8e6cb0b61ddae) — `docs/threat-model.md` (modelo de amenazas semana 9). Documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/1ccf9302b205971fbe97bc073df8e6cb0b61ddae/docs/threat-model.md
+
 - Decisión técnica que puedo explicar:
+  Elaborar el modelo de amenazas a partir de lo ya implementado por el equipo, sin inventar controles. Se mapearon activos reales (datos de inspección en IndexedDB, coordenadas opcionales, metadatos de sync, Service Worker, integridad de scripts, permisos de cámara/geo) a amenazas (XSS en campos de texto, clickjacking, abuso de permisos, filtración en resúmenes, secretos en el repo, Referer con IDs) y a controles existentes: CSP con nonce y cabeceras (`src/lib/security/headers.ts` + middleware), validación del formulario, `toPrivacySafeSummary` (`privacy.ts`), inventario de privacidad, `robots.txt` y `tests/security.spec.ts`. Se documentaron residuos (IndexedDB legible en el mismo origen, API demo sin auth, robots no es control de acceso) para no sobreclaim de seguridad.
+
 - Prueba que ejecuté y resultado:
+  Verifiqué que el artefacto `docs/threat-model.md` está en el commit evaluado y que el check de semana 9 exige el conjunto completo (`threat-model`, `privacy-data-inventory`, `src/lib/security/`, `tests/security.spec.ts`, `public/robots.txt`). Con el modelo en develop, el fallo previo del workflow por falta de `threat-model.md` queda cubierto. El enlace al reporte global de Actions se actualizará con el SHA final en `main` tras el merge develop → main.
+
 - Limitación o fallo diagnosticado:
+  El modelo solo es tan fuerte como la implementación: si `toPrivacySafeSummary` no se usa en todos los puntos de salida, el riesgo de filtración en logs/resúmenes permanece. HSTS y HTTPS reales dependen del despliegue; en local no se fuerza HSTS. La API de demostración no tiene autenticación ni autorización de servidor.
+
 - Cambio que podría defender o modificar en vivo:
+  Añadir o quitar una amenaza/control en la tabla (por ejemplo enlazar explícitamente T1 con una prueba de validación o de CSP) y explicar por qué el control mitiga o no del todo el riesgo residual en IndexedDB.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Asistencia para estructurar el documento (secciones, tablas de activos y amenazas) alineado al código del repositorio. Validación propia: crucé cada control con rutas reales (`headers.ts`, `privacy.ts`, `validation.ts`, `robots.txt`, pruebas de seguridad) y contrasté los límites con lo ya documentado por el equipo.
 
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
