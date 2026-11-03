@@ -903,16 +903,28 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
   Asistencia para estructurar el documento (secciones, tablas de activos y amenazas) alineado al código del repositorio. Validación propia: crucé cada control con rutas reales (`headers.ts`, `privacy.ts`, `validation.ts`, `robots.txt`, pruebas de seguridad) y contrasté los límites con lo ya documentado por el equipo.
 
 
---------------------------------------
-# Semana 9 — Evidencia individual
+------------------------------------------------------------------------------------------------------
+# Semana 10 — Evidencia individual
 
-## Integrante:
+## Integrante: Rita González Sánchez
+
 - Commit SHA evaluado:
+  [`90e5d28ad5fda3fd568c02ba140afe5bbfc593e6`](https://github.com/Rita026/pwa-inspecciones-10B-E06/commit/90e5d28ad5fda3fd568c02ba140afe5bbfc593e6) — `docs/runbook.md` (recuperación ante versión defectuosa, rollback de artefacto y Service Worker). Documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/90e5d28ad5fda3fd568c02ba140afe5bbfc593e6/docs/runbook.md
+
 - Decisión técnica que puedo explicar:
+  Documentar un runbook operativo separado del proceso de release: síntomas de versión mala, rollback por tag/imagen/SHA, y recuperación del Service Worker (unregister + limpiar Cache Storage) sin borrar IndexedDB como primer paso. Se asume despliegue con el Dockerfile del equipo y la PWA offline existente; se dejan límites explícitos (rollback no repara datos locales del usuario; no hay orquestador cloud obligatorio en el curso).
+
 - Prueba que ejecuté y resultado:
+  Verifiqué que existe `docs/runbook.md` y el enlace desde el README. El contrato público de la semana exige además Dockerfile, release-process, smoke y workflow (trabajo del resto del equipo). Verificación del repo: `npm ci`, `npm run verify` / `make verify` según README; el enlace de Actions se completará con el SHA final en `main`.
+
 - Limitación o fallo diagnosticado:
+  El runbook no fuerza la actualización del SW en todos los clientes a la vez; la mitigación es por origen y perfil de navegador. Un rollback de servidor no deshace escrituras locales en IndexedDB si una versión mala ya persistió datos incorrectos.
+
 - Cambio que podría defender o modificar en vivo:
+  Añadir al checklist post-recuperación el healthcheck concreto o alinear el apartado del SW con la estrategia de caché documentada en `docs/release-process.md`.
+
 - Uso declarado de IA (herramienta, propósito, validación):
+  Asistencia para estructurar el runbook (síntomas, rollback, SW, límites) alineado a la PWA del repositorio. Validación propia: crucé el documento con el alcance de la semana 10 (artefacto, smoke, rollback/SW), IndexedDB/cola offline y la separación respecto a `docs/release-process.md`.
 
 
 ## Integrante:

@@ -642,3 +642,10 @@ Cada defecto se introdujo de forma temporal y se restauró antes de continuar.
 
 El análisis de activos, amenazas y controles está en [`docs/threat-model.md`](docs/threat-model.md).
 Se alinea con el inventario de privacidad, las cabeceras CSP y las pruebas en `tests/security.spec.ts`.
+
+---
+# Semana 10 — Operación y recuperación 
+
+El procedimiento ante una versión defectuosa (rollback de artefacto y Service Worker)
+está en [`docs/runbook.md`](docs/runbook.md). El proceso de release y versionado se
+documenta en `docs/release-process.md`.
