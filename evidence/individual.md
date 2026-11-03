@@ -903,4 +903,34 @@ Enlace al documento: https://github.com/Rita026/pwa-inspecciones-10B-E06/blob/fe
   Asistencia para estructurar el documento (secciones, tablas de activos y amenazas) alineado al código del repositorio. Validación propia: crucé cada control con rutas reales (`headers.ts`, `privacy.ts`, `validation.ts`, `robots.txt`, pruebas de seguridad) y contrasté los límites con lo ya documentado por el equipo.
 
 
+--------------------------------------
+# Semana 9 — Evidencia individual
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
+## Integrante:
+- Commit SHA evaluado:
+- Decisión técnica que puedo explicar:
+- Prueba que ejecuté y resultado:
+- Limitación o fallo diagnosticado:
+- Cambio que podría defender o modificar en vivo:
+- Uso declarado de IA (herramienta, propósito, validación):
+
+
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
